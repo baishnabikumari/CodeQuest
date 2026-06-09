@@ -184,3 +184,94 @@ a:hover{
     font-weight: 600;
     border: 1px solid;
 }
+
+.home{
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    max-width: 660px;
+    margin: 0 auto;
+}
+
+.tagline{
+    color: var(--text-dim);
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: 2px;
+}
+
+.section{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sect-lbl{
+    font-family: var(--font-game);
+    font-size: 8px;
+    color: #2e2e44;
+    letter-spacing: 3px;
+}
+
+.topic-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.topic-card{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 10px;
+    border: 2px solid;
+    border-radius: var(--radius);
+    transition: all 0.18s;
+}
+
+.topic-lbl {
+    font-size: 13px;
+    font-weight: 600;
+    transition: color 0.18s;
+}
+
+.diff-row{
+    display: flex;
+    gap: 12px;
+}
+
+.diff-btn{
+    flex: 1;
+    padding: 14px 8px;
+    background: var(--surface);
+    border: 2px solid;
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.18s;
+}
+
+.diff-label{
+    font-family: var(--font-game);
+    font-size: 9px;
+}
+
+.diff-pts{
+    font-size: 11px;
+    opacity: 0.6;
+}
+
+.start-btn{
+    background: linear-gradient(135deg, var(--green), var(--cyan));
+    color: var(--bg);
+    border: none;
+    border-radius: var(--radius);
+    padding: 16px 40px;
+    font-family: 12px;
+    font-weight: 700;
+    align-self: center;
+    transition: opacity 0.2s;
+}

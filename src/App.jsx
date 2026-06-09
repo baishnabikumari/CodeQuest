@@ -1,6 +1,7 @@
 import { useState } from "react"
 import "./style.css"
 import Header from "./Header"
+import Home from "./Home"
 
 export default function App(){
     const [screen, setScreen] = useState("home")
@@ -15,7 +16,13 @@ export default function App(){
         <div className="app">
             <Header xp={xp} streak={streak}/>
             <div className="body">
-                {screen === "home" && <div className="placeholder">Home Screen</div>}
+                {screen === "home" && (
+                    <Home onStart={(t,d) => {
+                        setTopic(t)
+                        setDiff(d)
+                        setScreen("loading")
+                    }} />
+                )}
                 {screen === "loading" && <div className="place">Loading</div>}
                 {screen === "challenge" && <div className="placeholder">challenge</div>}
             </div>
