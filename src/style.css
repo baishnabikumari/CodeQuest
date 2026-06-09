@@ -275,3 +275,33 @@ a:hover{
     align-self: center;
     transition: opacity 0.2s;
 }
+
+/* loading */
+.load-wrap{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
+    gap: 24px;
+    min-height: 60vh;
+}
+
+.load-dots{
+    display: flex;
+    gap: 12px;
+}
+
+.dot{
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: dotBounce 0.75s ease-in-out infinite;
+}
+
+.load-txt{
+    font-family: var(--font-game);
+    font-size: 10px;
+    color: var(--text-dim);
+}

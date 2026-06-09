@@ -2,6 +2,7 @@ import { useState } from "react"
 import "./style.css"
 import Header from "./Header"
 import Home from "./Home"
+import Loading from "./Loading"
 
 export default function App(){
     const [screen, setScreen] = useState("home")
@@ -23,7 +24,7 @@ export default function App(){
                         setScreen("loading")
                     }} />
                 )}
-                {screen === "loading" && <div className="place">Loading</div>}
+                {screen === "loading" && <Loading />}
                 {screen === "challenge" && <div className="placeholder">challenge</div>}
             </div>
         </div>
