@@ -1,10 +1,10 @@
 import { Brackets, Brain, Dot, Play, Quote, Repeat, SquareFunction, Variable } from "lucide-react"
-import { use, useState } from "react"
+import { useState } from "react"
 
 const TOPICS = [
     {id: "variables and data type", label: "Variables", icon: Variable, accent: "#00ff88" },
     {id: "for loops and while loops", label: "Loops", icon: Repeat, accent: "#00d4ff"},
-    {id: "functiond and scope", label: "Functions", icon: SquareFunction, accent: "#ffd93d" },
+    {id: "functions and scope", label: "Functions", icon: SquareFunction, accent: "#ff6348" },
     {id: "arrays and array methods", label: "Arrays", icon: Brackets, accent: "#ffd93d"},
     {id: "string manipulation", label: "Strings", icon: Quote, accent: "#ff4da6"},
     {id: "basic algorithms", label: "Algorithms", icon: Brain, accent: "#a855f7"},
@@ -23,7 +23,7 @@ export default function Home({ onStart }){
 
     return(
         <div className="home fade-in">
-            <p className="tagline">Pick a Topic <Dot/> Solve Challenges <dot/> Earn XP</p>
+            <p className="tagline">Pick a Topic <Dot/> Solve Challenges <Dot/> Earn XP</p>
 
             <div className="section">
                 <div className="sect-lbl">CHOOSE TOPIC</div>
@@ -39,7 +39,7 @@ export default function Home({ onStart }){
                                 boxShadow: topic === t.id ? `0 0 0 1px ${t.accent}` : "none",
                             }}
                         >
-                            <span style={{ fontSize: 26 }}>{t.icon}</span>
+                            <t.icon size={26}/>
                             <span
                                 className="topic-lbl"
                                 style={{color: topic === t.id ? t.accent : "var(--text-mid)"}}
@@ -57,6 +57,7 @@ export default function Home({ onStart }){
                         <button
                             key={d.label}
                             onClick={() => setDiff(d.label)}
+                            className="diff-btn"
                             style={{
                                 color: diff === d.label ? d.color : "var(--text-dim)",
                                 borderColor: diff === d.label ? d.color : "var(--border)",
