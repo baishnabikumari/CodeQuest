@@ -1,7 +1,8 @@
+import logo from "./logo.png"
 export default function Header({ xp, streak}){
     return(
         <header className="header">
-            <span className="logo">CODE QUEST</span>
+            <img src={logo} alt="CodeQuest" className="logo-img" />
             <div className="header-right">
                 {streak >= 2 &&(
                     <span className="badge" style={{color: "var(--orange)", borderColor: "#ff634844"}}>

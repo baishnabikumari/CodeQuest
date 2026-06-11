@@ -171,6 +171,11 @@ a:hover{
     animation: logoPulse 4s ease-in-out infinite;
 }
 
+.logo-img{
+    height: 32px;
+    object-fit: contain;
+}
+
 .header-right{
     display: flex;
     gap: 10px;
