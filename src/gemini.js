@@ -12,7 +12,7 @@ Return ONLY valid, no markdown, no backticks:
     "description": "2-3 sentence problem with one example. Use \\n for newlines.",
     "starterCode": "function solution(/* params */) {\\n // your code here\\n}",
     "testCases": [
-        {"args": [args1], "expected": result}
+        {"args": [args1], "expected": result},
         {"args": [args2], "expected": result},
         {"args": [args3], "expected": result}
     ],
@@ -22,7 +22,7 @@ Rules: function must be named "solution". args must be valid JSON. exactly 3 tes
     try{
         const result = await model.generateContent(prompt)
         const text = result.response.text()
-        return JSON.parse(text.replace(/```json\n?```/g, "").trim())
+        return JSON.parse(text.replace(/```json\n?|```/g, "").trim())
     } catch {
         return{
             title: "Count the Vowels",
@@ -44,7 +44,30 @@ export async function getHint(description, code, onChunk){
         const result = await model.generateContentStream(prompt)
         let full = ""
         for await (const chunk of result.stream) {
-            
+            full += chunk.text()
+            onChunk(full)
         }
+        return full
+    } catch {
+        const fallback = "Try breaking the problem into smaller step!"
+        onChunk(fallback)
+        return fallback
+    }
+}
+
+export async function getReview(description, code, onChunk) {
+    const prompt = `A student solved this challenge:\n${description}\n\nTheir solution:\n${code}\n\nGive 2-3 sentence of the code review. Mention one strength and one improvement.`
+    try{
+        const result = await model.generateContentStream(prompt)
+        let full = ""
+        for await (const chunk of result.stream){
+            full += chunk.text()
+            onChunk(full)
+        }
+        return full
+    } catch {
+        const fallback = "Great solution clean logic. Try thinking about edge cases next time."
+        onChunk(fallback)
+        return fallback
     }
 }
