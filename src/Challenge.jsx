@@ -65,17 +65,15 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
     async function handleHint() {
         if (hintBusy) return
         setHintBusy(true)
-        const txt = await getHint(challenge.description, code)
-        setHint(txt)
+        await getHint(challenge.description, code, txt => setHint(txt))
         setHintBusy(false)
     }
 
     async function handleReview() {
         if (reviewBusy) return
         setReviewBusy(true)
-        const txt = await getReview(challenge.description, code)
-        setReview(txt)
-        setActiveTab("review")
+        setActiveTab(review)
+        await getReview(challenge.description, code, txt => setReview(txt))
         setReviewBusy(false)
     }
 
