@@ -1,19 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;700&family=DM+Sans:wght@400;500;600&display=swap');
 
 :root {
-    --bg: #0a0a14;
-    --surface: #0e0e1c;
-    --surface2: #13131f;
-    --border: #1e1e30;
-    --green: #00ff88;
-    --cyan: #00d4ff;
-    --yellow: #ffd93d;
+    --bg: #1C0F0A;
+    --surface: #2A1810;
+    --surface2: #3D2218;
+    --border: #4D2E1A;
+    --primary: #E35336;
+    --amber: #00d4ff;
+    --green: #00FF88;
     --red: #ff4757;
     --purple: #a855f7;
-    --orange: #ff6348;
-    --text: #e0e0f0;
-    --text-dim: #55556a;
-    --text-mid: #9999b0;
+    --text: #F5F5DC;
+    --text-dim: #A0522D;
+    --text-mid: #C4956A;
     --font-body: 'DM Sans', sans-serif;
     --font-code: 'JetBrains Mono', monospace;
     --font-game: 'Press Start 2P', monospace;
@@ -59,7 +58,7 @@ textarea{
 }
 
 a{
-    color: var(--cyan);
+    color: var(--amber);
     text-decoration: none;
 }
 a:hover{
@@ -86,7 +85,7 @@ a:hover{
     font-family: var(--font-game);
     font-size: 13px;
     color: var(--green);
-    text-shadow: 0 0 10px #00ff8866;
+    text-shadow: 0 0 10px #e3533666;
     background: var(--bg);
 }
 
@@ -105,7 +104,7 @@ a:hover{
         text-shadow: 0 0 8px #00ff8855;
     }
     50%{
-        text-shadow: 0 0 22px #00ff88aa, 0 0 44px #00ff8833;
+        text-shadow: 0 0 22px #E35336aa, 0 0 44px #E3533633;
     }
 }
 
@@ -167,7 +166,7 @@ a:hover{
 .logo{
     font-family: var(--font-game);
     font-size: 14px;
-    color: var(--green);
+    color: var(--primary);
     animation: logoPulse 4s ease-in-out infinite;
 }
 
@@ -214,7 +213,7 @@ a:hover{
 .sect-lbl{
     font-family: var(--font-game);
     font-size: 8px;
-    color: #2e2e44;
+    color: #4D2E1A;
     letter-spacing: 3px;
 }
 
@@ -270,7 +269,7 @@ a:hover{
 }
 
 .start-btn{
-    background: linear-gradient(135deg, var(--green), var(--cyan));
+    background: var(--primary);
     color: var(--bg);
     border: none;
     border-radius: var(--radius);
@@ -347,7 +346,7 @@ a:hover{
 .chal-title{
     font-family: var(--font-game);
     font-size: 11px;
-    color: var(--green);
+    color: var(--primary);
     line-height: 1.9;
 }
 
@@ -359,8 +358,8 @@ a:hover{
 }
 
 .fact-box{
-    background: #00d4ff0a;
-    border: 1px solid #00d4ff1e;
+    background: #F4A46010;
+    border: 1px solid #F4A46030;
     border-radius: var(--radius-sm);
     padding: 10px 14px;
     font-size: 13px;
@@ -376,9 +375,9 @@ a:hover{
 }
 
 .hint-btn{
-    background: #00d4ff12;
-    border: 1px solid #00d4ff30;
-    color: var(--cyan);
+    background: #F4A46012;
+    border: 1px solid #F4A46030;
+    color: var(--amber);
     padding: 9px 14px;
     border-radius: var(--radius-sm);
     font-size: 13px;
