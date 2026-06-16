@@ -1,5 +1,5 @@
 import { motion, AnimatePresence} from "framer-motion"
-import { Brackets, Brain, Dot, Icon, Play, Quote, Repeat, SquareFunction, Ticket, Variable } from "lucide-react"
+import { Brackets, Brain, CheckCheck, Dot, Icon, Play, Quote, Repeat, Shuffle, SquareFunction, Ticket, Variable } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 
 const TOPICS = [
@@ -59,6 +59,7 @@ export default function Home({ onStart }){
     const [overlay, setOverlay] = useState(false)
     const [diff, setDiff] = useState("Easy")
     const [shuffling, setShuffling] = useState(false)
+    const [toast, setToast] = useState(false)
 
     useEffect(() => {
         const t = setInterval(() => setTickerIdx(i => (i + 1) % 3), 1000)
@@ -71,6 +72,8 @@ export default function Home({ onStart }){
                 if (e.key === "Escape") setOverlay(false)
                 return
             }
+            if(shuffling) return
+            if(mode === "shuffle") return
             if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A")
                 setActiveIdx(i => (i - 1 + 6) % 6)
             if (e.key === "ArrowRight" || e.key === "d" || e.key === "D")
@@ -80,17 +83,24 @@ export default function Home({ onStart }){
         }
         window.addEventListener("keydown", onKey)
         return () => window.removeEventListener("keydown", onKey)
-    }, [overlay])
+    }, [overlay, shuffling, mode])
 
     function handleShuffle(){
         if(shuffling) return
         setShuffling(true)
         setOverlay(false)
+        setToast(false)
         let count = 0
         const t = setInterval(() => {
             setActiveIdx(Math. floor(Math.random() * 6))
             count++
-            if (count >= 14) { clearInterval(t); setShuffling(false) }
+            if (count >= 14) { 
+                clearInterval(t);
+                setShuffling(false) 
+                setToast(true)
+                setTimeout(() => setToast(false), 2000)
+                setTimeout(() => setOverlay(true), 400)
+            }
         }, 110)
     }
 
@@ -157,6 +167,8 @@ export default function Home({ onStart }){
                             transition={{ type: "spring", stiffness: 280, damping: 28 }}
                             onClick={() => {
                                 if(overlay) return
+                                if(shuffling) return
+                                if(mode === "shuffle" && !isCenter) return
                                 if(isCenter) setOverlay(true)
                                     else if(visible) setActiveIdx(idx)
                             }}
@@ -177,8 +189,9 @@ export default function Home({ onStart }){
                                             key={tickerIdx}
                                             className="card-ticker"
                                             initial={{ opacity:0, y:5 }}
-                                            animate={{ opacity:0, y:-5 }}
-                                            exit={{ opacity:0.18 }}
+                                            animate={{ opacity:1, y:0 }}
+                                            exit={{ opacity:0, y:-5 }}
+                                            transition={{ duration: 0.18 }}
                                         >
                                             <span style={{ color: tickerDiff.color, fontWeight: 600}}>{tickerDiff.label}</span>
                                             <span className="ticker-dot"> · </span>
@@ -241,6 +254,35 @@ export default function Home({ onStart }){
                     >
                         {TOPICS[activeIdx].label}
                     </motion.p>
+                )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+                {toast && (
+                    <motion.div
+                        className="gen-toast"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.25 }}
+                    >
+                        <CheckCheck/> Gen-Do picked this!
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+                {mode === "shuffle" && !shuffling && !overlay &&(
+                    <motion.button
+                        className="shuffle-again-btn"
+                        onClick={handleShuffle}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 8 }}
+                        transition={{ duration: 0.25 }}
+                    >
+                       <Shuffle/> Shuffle Again
+                    </motion.button>
                 )}
             </AnimatePresence>
         </div>
