@@ -161,7 +161,7 @@ export default function Home({ onStart }){
                                 x: visible ? anim.x : pos > 0 ? 660 : -660,
                                 scale: expanded ? 1.8 : anim.scale,
                                 filter: expanded ? "blur(0px)" : overlay ? "blur(5px)" : (visible ? anim.filter : "blur(0px)"),
-                                opacity: expanded ? 1 : overlay ? 0.3 : (visible ? anim.opacity : 0),
+                                opacity: expanded ? 1 : overlay ? 0 : (visible ? anim.opacity : 0),
                                 zIndex: expanded ? 50 : anim.zIndex,
                                 pointerEvents: expanded ? "auto" : overlay ? "none" : (visible ? "auto" : "none"),
                             }}
