@@ -526,6 +526,7 @@ a:hover{
 }
 
 .home-v2{
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -635,7 +636,7 @@ a:hover{
     margin: 0 3px;
 }
 
-.diff-overlay{
+/* .diff-overlay{
     position: absolute;
     inset: 0;
     border-radius: 14px;
@@ -663,6 +664,56 @@ a:hover{
     font-size: 7px;
     color: var(--primary);
     letter-spacing: 1px;
+} */
+
+.home-bg{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    transition: filter 0.25s, opacity 0.25;
+}
+
+.is-blurred{
+    filter: blur(6px);
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+.rain-layer{
+    position: absolute;
+    top: -60px;
+    left: 0;
+    right: 0;
+    bottom: -60px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.expand-content{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.expand-icon{
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.expand-name{
+    font-family: var(--font-game);
+    font-size: 10px;
+    letter-spacing: 1px;
 }
 
 .overlay-diffs{
@@ -679,7 +730,8 @@ a:hover{
     border-radius: 8px;
     display: flex;
     justify-content: space-between;
-    align-items: 12px;
+    align-items: center;
+    font-size: 12px;
     font-weight: 600;
     transition: all 0.15s;
 }

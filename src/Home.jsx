@@ -102,28 +102,43 @@ export default function Home({ onStart }){
 
     return (
         <div className="home-v2 fade-in">
-            <div className="mode-toggle">
-                <button
-                    className={`mode-btn ${mode === "choose" ? "mode-active" : ""}`}
-                    onClick={() => setMode("choose")}
-                >
-                    Choose
-                </button>
-                <button
-                    className={`mode-btn ${mode === "shuffle" ? "mode-active" : ""} ${shuffling ? "shuffling" : ""}`}
-                    onClick={() => { setMode("shuffle"); handleShuffle() }}
-                >
-                    Gen-do
-                </button>
+            <div className={`home-bg ${overlay ? "is-blurred" : ""}`}>
+                <div className="mode-toggle">
+                    <button
+                        className={`mode-btn ${mode === "choose" ? "mode-active" : ""}`}
+                        onClick={() => setMode("choose")}
+                    >
+                        Choose
+                    </button>
+                    <button
+                        className={`mode-btn ${mode === "shuffle" ? "mode-active" : ""} ${shuffling ? "shuffling" : ""}`}
+                        onClick={() => { setMode("shuffle"); handleShuffle() }}
+                    >
+                        Gen-do
+                    </button>
+                </div>
+                <p className="kbd-hint">A · D → to navigate · Enter to Select</p>
             </div>
-            <p className="kbd-hint">A · D → to navigate · Enter to Select</p>
-
+            <AnimatePresence>
+                {overlay && (
+                    <motion.div
+                        className="rain-layer"
+                        initial={{ opacity:0 }}
+                        animate={{ opacity:1 }}
+                        exit={{ opacity:0 }}
+                        transition={{ duration:0.2 }}
+                    >
+                        <BinaryRain />
+                    </motion.div>
+                )}
+            </AnimatePresence>
             <div className="carousel-wrap">
                 {TOPICS.map((t, idx) => {
                      const pos = getPos(idx)
                      const visible = Math.abs(pos) <= 2
                      const anim = cardAnim(pos)
                      const isCenter = pos === 0
+                     const expanded = isCenter && overlay
 
                      return (
                         <motion.div
@@ -133,98 +148,100 @@ export default function Home({ onStart }){
                             animate={{
                                 ...anim,
                                 x: visible ? anim.x : pos > 0 ? 660 : -660,
-                                opacity: visible ? anim.opacity : 0,
-                                pointerEvents: visible ? "auto" : "none",
+                                scale: expanded ? 1.8 : anim.scale,
+                                filter: expanded ? "blur(0px)" : overlay ? "blur(5px)" : (visible ? anim.filter : "blur(0px)"),
+                                opacity: expanded ? 1 : overlay ? 0.3 : (visible ? anim.opacity : 0),
+                                zIndex: expanded ? 50 : anim.zIndex,
+                                pointerEvents: expanded ? "auto" : overlay ? "none" : (visible ? "auto" : "none"),
                             }}
                             transition={{ type: "spring", stiffness: 280, damping: 28 }}
                             onClick={() => {
+                                if(overlay) return
                                 if(isCenter) setOverlay(true)
                                     else if(visible) setActiveIdx(idx)
                             }}
                         >
-                            <div className="card-icon-area" style={{ background: t.accent + "22" }}>
-                                <t.Icon size={52} color={t.accent} strokeWidth={1.5} />
-                            </div>
+                            {!expanded && (
+                                <>
+                                    <div className="card-icon-area" style={{ background: t.accent + "22" }}>
+                                        <t.Icon size={52} color={t.accent} strokeWidth={1.5} />
+                                    </div>
 
-                            <div className="card-xp"> 50-200 XP</div>
-                            <div className="card-name" style={{ color: isCenter ? t.accent : "var(--text-mid)" }}>
-                                {t.label}
-                            </div>
+                                    <div className="card-xp"> 50-200 XP</div>
+                                    <div className="card-name" style={{ color: isCenter ? t.accent : "var(--text-mid)" }}>
+                                        {t.label}
+                                    </div>
 
-                            <AnimatePresence mode="wait">
-                                <motion.div
-                                    key={tickerIdx}
-                                    initial={{ opacity: 0, y: 5 }}
-                                    animate={{ opacity: 1, y: 0}}
-                                    exit={{ opacity: 0, y: -5 }}
-                                    transition={{ duration: 0.18 }}
-                                >
-                                    <span style={{ color: tickerDiff.color, fontWeight: 600}}>{tickerDiff.label}</span>
-                                    <span className="ticker-dot"> · </span>
-                                    <span>{t.times[tickerDiff.label]}</span>
-                                </motion.div>
-                            </AnimatePresence>
+                                    <AnimatePresence mode="wait">
+                                        <motion.div
+                                            key={tickerIdx}
+                                            className="card-ticker"
+                                            initial={{ opacity:0, y:5 }}
+                                            animate={{ opacity:0, y:-5 }}
+                                            exit={{ opacity:0.18 }}
+                                        >
+                                            <span style={{ color: tickerDiff.color, fontWeight: 600}}>{tickerDiff.label}</span>
+                                            <span className="ticker-dot"> · </span>
+                                            <span>{t.times[tickerDiff.label]}</span>
+                                        </motion.div>
+                                    </AnimatePresence>
+                                </>
+                            )}
 
-                            <AnimatePresence>
-                                {isCenter && overlay && (
-                                    <motion.div
-                                        className="diff-overlay"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        transition={{ duration: 0.18 }}
-                                        onClick={e => e.stopPropagation()}
-                                    >
-                                        <BinaryRain />
-                                        <div className="overlay-inner">
-                                            <div className="overlay-topic">{t.label}</div>
-                                            <div className="overlay-diffs">
-                                                {DIFFS.map(d => (
-                                                    <button
-                                                        key={d.label}
-                                                        className="overlay-diff-btn"
-                                                        style={{
-                                                            borderColor: diff === d.label ? d.color : "#4D2E1A",
-                                                            color: diff === d.label ? d.color : "var(--text-mid)",
-                                                            background: diff === d.label ? d.color + "18" : "#2A1810",
-                                                        }}
-                                                        onClick={() => setDiff(d.label)}
-                                                    >
-                                                        <span className="odiff-label">{d.label}</span>
-                                                        <span className="odiff-pts">+{d.pts} XP</span>
-                                                    </button>
-                                                ))}
-                                            </div>
+                            {expanded && (
+                                <div className="expand-content">
+                                    <div className="expand-icon" style={{ background: t.accent + "22" }}>
+                                        <t.Icon size={32} color={t.accent} strokeWidth={1.5}/>
+                                    </div>
+                                    <div className="expand-name" style={{ color: t.accent }}>{t.label}</div>
+
+                                    <div className="overlay-diffs">
+                                        {DIFFS.map(d => (
                                             <button
-                                                className="overlay-start"
-                                                style={{ background: t.accent }}
-                                                onClick={() => onStart(t.id, diff)}
+                                                key={d.label}
+                                                className="overlay-diff-btn"
+                                                style={{
+                                                    borderColor: diff === d.label ? d.color : "#4D2E1A",
+                                                    color: diff === d.label ? d.color : "var(--text-mid)",
+                                                    background: diff === d.label ? d.color + "18" : "#2A1810",
+                                                }}
+                                                onClick={() => setDiff(d.label)}
                                             >
-                                                Start
+                                                <span className="odiff-label">{d.label}</span>
+                                                <span className="odiff-pts">+{d.pts} XP</span>
                                             </button>
-                                            <button className="overlay-cancel" onClick={() => setOverlay(false)}>
-                                                x Cancel
-                                            </button>
-                                        </div>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
+                                        ))}
+                                    </div>
+                                    <button
+                                        className="overlay-start"
+                                        style={{ background: t.accent }}
+                                        onClick={() => onStart(t.id, diff)}
+                                    >
+                                        Start
+                                    </button>
+                                    <button className="overlay-cancel" onClick={() => setOverlay(false)}>
+                                        Cancel
+                                    </button>
+                                </div>
+                            )}
                         </motion.div>
                      )
                 })}
             </div>
 
             <AnimatePresence mode="wait">
-                <motion.p
-                    key={activeIdx}
-                    className="active-label"
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    transition={{ duration: 0.2 }}
-                >
-                    {TOPICS[activeIdx].label}
-                </motion.p>
+                {!overlay && (
+                    <motion.p
+                        key={activeIdx}
+                        className="active-label"
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: 0.2 }}
+                    >
+                        {TOPICS[activeIdx].label}
+                    </motion.p>
+                )}
             </AnimatePresence>
         </div>
     )
