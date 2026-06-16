@@ -121,6 +121,7 @@ export default function Home({ onStart }){
                         Choose
                     </button>
                     <button
+                        disabled={shuffling}
                         className={`mode-btn ${mode === "shuffle" ? "mode-active" : ""} ${shuffling ? "shuffling" : ""}`}
                         onClick={() => { setMode("shuffle"); handleShuffle() }}
                     >
