@@ -41,7 +41,7 @@ export default function App(){
             <Header xp={xp} streak={streak}/>
             <div className="body">
                 {screen === "home" && (
-                    <Home onStart={startChallenge} />
+                    <Home onStart={startChallenge} xp={xp}/>
                 )}
                 {screen === "loading" && <Loading />}
                 {screen === "challenge" && challenge && (

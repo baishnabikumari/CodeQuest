@@ -1,4 +1,6 @@
 import { motion, AnimatePresence} from "framer-motion"
+import { Map } from "lucide-react"
+import MapScreen from "./MapScreen"
 import { Brackets, Brain, CheckCheck, Dot, Icon, Play, Quote, Repeat, Shuffle, SquareFunction, Ticket, Variable } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 
@@ -52,7 +54,7 @@ function cardAnim(pos){
     }
 }
 
-export default function Home({ onStart }){
+export default function Home({ onStart, xp }){
     const [mode, setMode] = useState("choose")
     const [activeIdx, setActiveIdx] = useState(0)
     const [tickerIdx, setTickerIdx] = useState(0)
@@ -60,6 +62,7 @@ export default function Home({ onStart }){
     const [diff, setDiff] = useState("Easy")
     const [shuffling, setShuffling] = useState(false)
     const [toast, setToast] = useState(false)
+    const [mapOpen, setMapOpen] = useState(false)
 
     useEffect(() => {
         const t = setInterval(() => setTickerIdx(i => (i + 1) % 3), 1000)
@@ -284,6 +287,21 @@ export default function Home({ onStart }){
                     >
                        <Shuffle size={18}/> Shuffle Again
                     </motion.button>
+                )}
+            </AnimatePresence>
+
+            <motion.button
+                className="map-btn"
+                onClick={() => setMapOpen(true)}
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.95 }}
+            >
+                <Map size={20}/>
+            </motion.button>
+
+            <AnimatePresence>
+                {mapOpen && (
+                    <MapScreen xp={xp} onClose={() => setMapOpen(false)}/>
                 )}
             </AnimatePresence>
         </div>
