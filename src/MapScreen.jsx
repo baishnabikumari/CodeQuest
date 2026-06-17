@@ -4,13 +4,13 @@ import { useState } from "react"
 
 const CITIES = [
     {
-        id: "nyc", name: "New York", emoji: <Hotel />, country: "USA",
+        id: "nyc", name: "New York", emoji: "🗽", country: "USA",
         xpNeeded: 50, x: 10, y: 58,
         fact: "NYC has about 300,000 teck workers and the world's most iconic skyline too.",
         codeLink: "Wall street's trading systems monitor of prices of stocks every milliseconds by using variables"
     },
     {
-        id: "london", name: "London", emoji: <TowerControl />, country: "UK",
+        id: "london", name: "London", emoji: "🎡", country: "UK",
         xpNeeded: 150, x: 28, y: 30,
         fact: "London has 270+ nationalities speaking over 300+ languages.",
         codeLink: "The financial systems in london constantly check out millions of current market points with the aid of loops"
@@ -42,8 +42,8 @@ const CITIES = [
 ]
 
 export default function MapScreen({ xp, onClose }) {
-    const [selectionCity, setSelectedCity] = useState(null)
-    const unlocked = city => xp => city.xpNeeded
+    const [selectedCity, setSelectedCity] = useState(null)
+    const unlocked = city => xp >= city.xpNeeded
     const visited = CITIES.filter(c => unlocked(c)).length
 
     return (
@@ -75,7 +75,7 @@ export default function MapScreen({ xp, onClose }) {
                                 strokeWidth="0.6"
                                 strokeDasharray="2 2"
                                 initial={{ pathLength: 0, opacity: 0 }}
-                                animate={{ pathLength: 0, opacity: 1 }}
+                                animate={{ pathLength: 1, opacity: 1 }}
                                 transition={{ delay: i * 0.15, duration: 0.4 }}
                             />
                         )
@@ -87,9 +87,8 @@ export default function MapScreen({ xp, onClose }) {
                     return (
                         <motion.div
                             key={city.id}
-                            className={`city-pin ${isUnlocked ? "pin-unlocked" : "pin-locker"}`}
-                            style={{ scale: 0, opacity: 0 }}
-                            initial={{ scale: 1, opacity: 1 }}
+                            className={`city-pin ${isUnlocked ? "pin-unlocked" : "pin-locked"}`}
+                            initial={{ scale: 0, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             transition={{ delay: i * 0.1, type: "spring", stiffness: 300 }}
                             onClick={() => isUnlocked && setSelectedCity(city)}
@@ -125,7 +124,7 @@ export default function MapScreen({ xp, onClose }) {
                                 <X size={16} />
                             </button>
                         </div>
-                        <div className="city-card-station">
+                        <div className="city-card-section">
                             <div className="city-section-lbl">Travel Fact</div>
                             <p>{selectedCity.fact}</p>
                         </div>
