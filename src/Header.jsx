@@ -1,4 +1,4 @@
-import logo from "./logo .png"
+import logo from "./logo.png"
 export default function Header({ xp, streak}){
     return(
         <header className="header">
