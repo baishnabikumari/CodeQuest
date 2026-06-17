@@ -123,7 +123,7 @@ export default function Home({ onStart }){
                     <button
                         disabled={shuffling}
                         className={`mode-btn ${mode === "shuffle" ? "mode-active" : ""} ${shuffling ? "shuffling" : ""}`}
-                        onClick={() => { setMode("shuffle"); handleShuffle() }}
+                        onClick={() => { setMode("shuffle"); if(mode !== "shuffle") handleShuffle() }}
                     >
                         Gen-do
                     </button>
