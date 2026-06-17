@@ -830,6 +830,6 @@ a:hover{
     color: var(--primary);
     padding: 8px 20px;
     border-radius: 20px;
-    font-size: 13px;
+    font-size: 25px;
     font-weight: 600;
 }

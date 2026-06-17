@@ -282,7 +282,7 @@ export default function Home({ onStart }){
                         exit={{ opacity: 0, y: 8 }}
                         transition={{ duration: 0.25 }}
                     >
-                       <Shuffle/> Shuffle Again
+                       <Shuffle size={18}/> Shuffle Again
                     </motion.button>
                 )}
             </AnimatePresence>
