@@ -5,37 +5,37 @@ import { useState } from "react"
 const CITIES = [
     {
         id: "nyc", name: "New York", emoji: "🗽", country: "USA",
-        xpNeeded: 50, x: 10, y: 58,
+        xpNeeded: 50, x: 21, y: 34,
         fact: "NYC has about 300,000 teck workers and the world's most iconic skyline too.",
         codeLink: "Wall street's trading systems monitor of prices of stocks every milliseconds by using variables"
     },
     {
         id: "london", name: "London", emoji: "🎡", country: "UK",
-        xpNeeded: 150, x: 28, y: 30,
+        xpNeeded: 150, x: 46, y: 23,
         fact: "London has 270+ nationalities speaking over 300+ languages.",
         codeLink: "The financial systems in london constantly check out millions of current market points with the aid of loops"
     },
     {
         id: 'paris', name: "Paris", emoji: "🗼", country: "France",
-        xpNeeded: 300, x: 44, y: 45,
+        xpNeeded: 300, x: 48, y: 27,
         fact: "The eiffel tower grows 15cm taller every summer due to the heat expansion.",
         codeLink: "The scheduling system of Paris Metro optimises routes for 5M daily passengers using functions"
     },
     {
         id: "dubai", name: "Dubai", emoji: "🕋", country: "UAE",
-        xpNeeded: 500, x: 60, y: 52,
+        xpNeeded: 500, x: 58, y: 40,
         fact: "Dubai has around 200+ natinalities - the world's most diverse city.",
         codeLink: "In duabi, sensor readings are stored in arrays in the small city to control power, water and traffic"
     },
     {
         id: "seoul", name: "Seoul", emoji: "⛩️", country: "South Korea",
-        xpNeeded: 750, x: 76, y: 32,
+        xpNeeded: 750, x: 77, y: 28,
         fact: "Seoul has the world's fastest avg internet speed.",
         codeLink: "String manipulation is a method used by korean tech giants to create multilingual software for billion of users."
     },
     {
         id: "tokyo", name: "Tokyo", emoji: "🏯", country: "Japan",
-        xpNeeded: 1000, x: 90, y: 52,
+        xpNeeded: 1000, x: 80, y: 33,
         fact: "Tokyo's shinjuku station handle around 3.5 million passangers daily - the world's busiest station.",
         codeLink: "The smart city tokyo has sophisticated algorithm powering the city's traffic, power and emergency management systems."
     },
@@ -61,6 +61,7 @@ export default function MapScreen({ xp, onClose }) {
             </div>
 
             <div className="map-area">
+                <img src="/worldMap.png" className="map-bg" alt="world map" />
                 <svg className="map-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
                     {CITIES.map((city, i) => {
                         if (i === CITIES.length - 1) return null
@@ -88,11 +89,19 @@ export default function MapScreen({ xp, onClose }) {
                         <motion.div
                             key={city.id}
                             className={`city-pin ${isUnlocked ? "pin-unlocked" : "pin-locked"}`}
+                            style={{ left: `${city.x}%`, top: `${city.y}%` }}
                             initial={{ scale: 0, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             transition={{ delay: i * 0.1, type: "spring", stiffness: 300 }}
                             onClick={() => isUnlocked && setSelectedCity(city)}
                         >
+                            {isUnlocked && (
+                                <motion.div
+                                    className="pin-pulse"
+                                    animate={{ scale: [1, 2.5], opacity: [0.6, 0]}}
+                                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeOut" }}
+                                />
+                            )}
                             <div className="pin-bubble">{city.emoji}</div>
                             <div className="pin-label">{city.name}</div>
                             {!isUnlocked && (

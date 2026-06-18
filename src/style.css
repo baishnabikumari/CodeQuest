@@ -919,7 +919,7 @@ a:hover{
     cursor: pointer;
 }
 
-.pin-bubble{
+/* .pin-bubble{
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -945,7 +945,7 @@ a:hover{
 .pin-locked .pin-bubble{
     filter: grayscale(1);
     opacity: 0.4;
-}
+} */
 
 .pin-label{
     font-size: 10px;
@@ -964,6 +964,39 @@ a:hover{
     gap: 3px;
     font-size: 9px;
     color: var(--text-dim);
+}
+
+.map-bg{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.85;
+}
+
+.pin-dot{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--text-dim);
+    position: relative;
+    z-index: 2;
+}
+
+.pin-unlocked .pin-dot{
+    background: var(--primary);
+    box-shadow: 0 0 8px #E3533688;
+}
+
+.pin-pulse{
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--primary);
+    top: 0;
+    z-index: 1;
 }
 
 .city-card{
