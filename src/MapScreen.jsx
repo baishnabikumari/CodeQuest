@@ -5,37 +5,37 @@ import { useState } from "react"
 const CITIES = [
     {
         id: "nyc", name: "New York", emoji: "🗽", country: "USA",
-        xpNeeded: 50, x: 21, y: 34,
+        xpNeeded: 50, x: 13, y: 68,
         fact: "NYC has about 300,000 teck workers and the world's most iconic skyline too.",
         codeLink: "Wall street's trading systems monitor of prices of stocks every milliseconds by using variables"
     },
     {
         id: "london", name: "London", emoji: "🎡", country: "UK",
-        xpNeeded: 150, x: 46, y: 23,
+        xpNeeded: 150, x: 28, y: 26,
         fact: "London has 270+ nationalities speaking over 300+ languages.",
         codeLink: "The financial systems in london constantly check out millions of current market points with the aid of loops"
     },
     {
         id: 'paris', name: "Paris", emoji: "🗼", country: "France",
-        xpNeeded: 300, x: 48, y: 27,
+        xpNeeded: 300, x: 34, y: 75,
         fact: "The eiffel tower grows 15cm taller every summer due to the heat expansion.",
         codeLink: "The scheduling system of Paris Metro optimises routes for 5M daily passengers using functions"
     },
     {
         id: "dubai", name: "Dubai", emoji: "🕋", country: "UAE",
-        xpNeeded: 500, x: 58, y: 40,
+        xpNeeded: 500, x: 53, y: 23,
         fact: "Dubai has around 200+ natinalities - the world's most diverse city.",
         codeLink: "In duabi, sensor readings are stored in arrays in the small city to control power, water and traffic"
     },
     {
         id: "seoul", name: "Seoul", emoji: "⛩️", country: "South Korea",
-        xpNeeded: 750, x: 77, y: 28,
+        xpNeeded: 750, x: 62, y: 72,
         fact: "Seoul has the world's fastest avg internet speed.",
         codeLink: "String manipulation is a method used by korean tech giants to create multilingual software for billion of users."
     },
     {
         id: "tokyo", name: "Tokyo", emoji: "🏯", country: "Japan",
-        xpNeeded: 1000, x: 80, y: 33,
+        xpNeeded: 1000, x: 82, y: 33,
         fact: "Tokyo's shinjuku station handle around 3.5 million passangers daily - the world's busiest station.",
         codeLink: "The smart city tokyo has sophisticated algorithm powering the city's traffic, power and emergency management systems."
     },
@@ -61,27 +61,7 @@ export default function MapScreen({ xp, onClose }) {
             </div>
 
             <div className="map-area">
-                <img src="/worldMap.png" className="map-bg" alt="world map" />
-                <svg className="map-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    {CITIES.map((city, i) => {
-                        if (i === CITIES.length - 1) return null
-                        const next = CITIES[i + 1]
-                        const pathUnlocked = unlocked(city)
-                        return (
-                            <motion.line
-                                key={city.id}
-                                x1={`${city.x}%`} y1={`${city.y}%`}
-                                x2={`${next.x}%`} y2={`${next.y}%`}
-                                stroke={pathUnlocked ? "#E35336" : "#4D2E1A"}
-                                strokeWidth="0.6"
-                                strokeDasharray="2 2"
-                                initial={{ pathLength: 0, opacity: 0 }}
-                                animate={{ pathLength: 1, opacity: 1 }}
-                                transition={{ delay: i * 0.15, duration: 0.4 }}
-                            />
-                        )
-                    })}
-                </svg>
+                <img src="/map.jpg" className="map-bg" alt="world map" />
 
                 {CITIES.map((city, i) => {
                     const isUnlocked = unlocked(city)
@@ -104,11 +84,6 @@ export default function MapScreen({ xp, onClose }) {
                             )}
                             <div className="pin-bubble">{city.emoji}</div>
                             <div className="pin-label">{city.name}</div>
-                            {!isUnlocked && (
-                                <div className="pin-lock-tag">
-                                    <Lock size={9} /> {city.xpNeeded} XP
-                                </div>
-                            )}
                         </motion.div>
                     )
                 })}
