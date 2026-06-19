@@ -2,7 +2,7 @@ import { motion, AnimatePresence} from "framer-motion"
 import { Map } from "lucide-react"
 import MapScreen from "./MapScreen"
 import { Brackets, Brain, CheckCheck, Dot, Icon, Play, Quote, Repeat, Shuffle, SquareFunction, Ticket, Variable } from "lucide-react"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 
 const TOPICS = [
     {id: "variables and data type", label: "Variables", Icon: Variable, accent: "#E35336", times: { Easy: "2 min", Medium: "4 min", Hard: "7 min" }},
@@ -63,6 +63,9 @@ export default function Home({ onStart, xp }){
     const [shuffling, setShuffling] = useState(false)
     const [toast, setToast] = useState(false)
     const [mapOpen, setMapOpen] = useState(false)
+    const mapBtnRef = useRef(null)
+    const [btnPos, setBtnPos] = useState({ x: 95, y: 95 })
+    const [genDoReady, setGenDoReady] = useState(false)
 
     useEffect(() => {
         const t = setInterval(() => setTickerIdx(i => (i + 1) % 3), 1000)
@@ -99,7 +102,8 @@ export default function Home({ onStart, xp }){
             count++
             if (count >= 14) { 
                 clearInterval(t);
-                setShuffling(false) 
+                setShuffling(false)
+                setGenDoReady(true)
                 setToast(true)
                 setTimeout(() => setToast(false), 2000)
                 setTimeout(() => setOverlay(true), 400)
@@ -120,13 +124,20 @@ export default function Home({ onStart, xp }){
                     <button
                         className={`mode-btn ${mode === "choose" ? "mode-active" : ""}`}
                         onClick={() => setMode("choose")}
+                        disabled={shuffling}
                     >
                         Choose
                     </button>
                     <button
                         disabled={shuffling}
                         className={`mode-btn ${mode === "shuffle" ? "mode-active" : ""} ${shuffling ? "shuffling" : ""}`}
-                        onClick={() => { setMode("shuffle"); if(mode !== "shuffle") handleShuffle() }}
+                        onClick={() => {
+                            setMode("shuffle")
+                            if(mode !== "shuffle"){
+                                if(genDoReady) setOverlay(true)
+                                    else handleShuffle()
+                            }
+                        }}
                     >
                         Gen-do
                     </button>
@@ -168,7 +179,7 @@ export default function Home({ onStart, xp }){
                                 zIndex: expanded ? 50 : anim.zIndex,
                                 pointerEvents: expanded ? "auto" : overlay ? "none" : (visible ? "auto" : "none"),
                             }}
-                            transition={{ type: "spring", stiffness: 280, damping: 28 }}
+                            transition={{ type: "spring", stiffness: 280, damping: 28, filter: { type: "tween", duration: 0.15 } }}
                             onClick={() => {
                                 if(overlay) return
                                 if(shuffling) return
@@ -232,7 +243,7 @@ export default function Home({ onStart, xp }){
                                     <button
                                         className="overlay-start"
                                         style={{ background: t.accent }}
-                                        onClick={() => onStart(t.id, diff)}
+                                        onClick={() => {setGenDoReady(false); onStart(t.id, diff) }}
                                     >
                                         Start
                                     </button>
@@ -291,17 +302,25 @@ export default function Home({ onStart, xp }){
             </AnimatePresence>
 
             <motion.button
+                ref={mapBtnRef}
                 className="map-btn"
-                onClick={() => setMapOpen(true)}
-                whileHover={{ scale: 1.08 }}
-                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                    if(mapBtnRef.current){
+                        const r = mapBtnRef.current.getBoundingClientRect()
+                        setBtnPos({
+                            x: Math.round(((r. left + r.width / 2) / window.innerWidth) * 100),
+                            y: Math.round(((r.top + r.height / 2) / window.innerHeight) * 100),
+                        })
+                    }
+                    setMapOpen(true)
+                }}
             >
                 <img src="/map-button.png" alt="map" style={{ width: 50, height: 50, objectFit: "contain" }}/>
             </motion.button>
 
             <AnimatePresence>
                 {mapOpen && (
-                    <MapScreen xp={xp} onClose={() => setMapOpen(false)}/>
+                    <MapScreen xp={xp} onClose={() => setMapOpen(false)} btnPos={btnPos}/>
                 )}
             </AnimatePresence>
         </div>

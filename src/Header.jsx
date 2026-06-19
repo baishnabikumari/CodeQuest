@@ -9,7 +9,7 @@ export default function Header({ xp, streak}){
                         🔥{streak}x
                     </span>
                 )}
-                <span className="badge" style={{color: "var(--green", borderColor: "#00ff8844"}}>
+                <span className="badge" style={{color: "var(--green)", borderColor: "#00ff8844"}}>
                     {xp} XP
                 </span>
             </div>

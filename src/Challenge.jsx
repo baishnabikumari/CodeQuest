@@ -72,7 +72,7 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
     async function handleReview() {
         if (reviewBusy) return
         setReviewBusy(true)
-        setActiveTab(review)
+        setActiveTab("review")
         await getReview(challenge.description, code, txt => setReview(txt))
         setReviewBusy(false)
     }

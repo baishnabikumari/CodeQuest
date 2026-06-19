@@ -9,6 +9,7 @@
     --amber: #00d4ff;
     --green: #00FF88;
     --red: #ff4757;
+    --orange: #ff6348;
     --purple: #a855f7;
     --text: #F5F5DC;
     --text-dim: #A0522D;
@@ -809,9 +810,12 @@ a:hover{
 }
 
 .gen-toast{
-    position: fixed;
-    top: 80px;
-    left: 50%;
+    position: absolute;
+    top: 570px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: fit-content;
     transform: translateX(-50%);
     background: var(--surface2);
     border: 1px solid var(--primary);
@@ -835,9 +839,9 @@ a:hover{
 }
 
 .map-btn{
-    position: fixed;
-    bottom: -125px;
-    right: -180px;
+    position: absolute;
+    top: 550px;
+    left: 1150px;
     width: 48px;
     height: 48px;
     background: var(--surface);
@@ -919,10 +923,10 @@ a:hover{
     transition: all 0.2s;
 }
 
-.pin-unlocked:hover{
+/* .pin-unlocked:hover{
     background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.25);
-}
+} */
 
 /* .pin-bubble{
     width: 40px;

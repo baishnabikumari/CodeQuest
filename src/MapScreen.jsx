@@ -41,7 +41,7 @@ const CITIES = [
     },
 ]
 
-export default function MapScreen({ xp, onClose }) {
+export default function MapScreen({ xp, onClose, btnPos }) {
     const [selectedCity, setSelectedCity] = useState(null)
     const unlocked = city => xp >= city.xpNeeded
     const visited = CITIES.filter(c => unlocked(c)).length
@@ -49,9 +49,9 @@ export default function MapScreen({ xp, onClose }) {
     return (
         <motion.div
             className="map-screen"
-            initial={{ clipPath: "circle(0% at 95% 95%)" }}
-            animate={{ clipPath: "circle(150% at 95% 95%)" }}
-            exit={{ clipPath: "circle(0% at 95% 95%)" }}
+            initial={{ clipPath: `circle(0% at ${btnPos.x}% ${btnPos.y}%` }}
+            animate={{ clipPath: `circle(150% at ${btnPos.x}% ${btnPos.y}%)` }}
+            exit={{ clipPath: `circle(0% at ${btnPos.x}% ${btnPos.y}%)` }}
             transition={{ type: "spring", stiffness: 180, damping: 26 }}
         >
             <div className="map-hdr">
