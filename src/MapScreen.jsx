@@ -5,7 +5,7 @@ import { useState } from "react"
 const CITIES = [
     {
         id: "nyc", name: "New York", emoji: "🗽", country: "USA",
-        xpNeeded: 50, x: 13, y: 68,
+        xpNeeded: 0, x: 13, y: 68,
         fact: "NYC has about 300,000 teck workers and the world's most iconic skyline too.",
         codeLink: "Wall street's trading systems monitor of prices of stocks every milliseconds by using variables"
     },
@@ -67,13 +67,6 @@ export default function MapScreen({ xp, onClose }) {
                     const isUnlocked = unlocked(city)
                     return (
                         <motion.div
-                            key={city.id}
-                            className={`city-pin ${isUnlocked ? "pin-unlocked" : "pin-locked"}`}
-                            style={{ left: `${city.x}%`, top: `${city.y}%` }}
-                            initial={{ scale: 0, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            transition={{ delay: i * 0.1, type: "spring", stiffness: 300 }}
-                            onClick={() => isUnlocked && setSelectedCity(city)}
                         >
                             {isUnlocked && (
                                 <motion.div
