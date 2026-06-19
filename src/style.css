@@ -836,13 +836,13 @@ a:hover{
 
 .map-btn{
     position: fixed;
-    bottom: 24px;
-    right: 24px;
+    bottom: -125px;
+    right: -180px;
     width: 48px;
     height: 48px;
     background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
+    border: none;
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -858,6 +858,8 @@ a:hover{
     z-index: 100;
     display: flex;
     flex-direction: column;
+    border-radius: 19px;
+    overflow: hidden;
 }
 
 .map-hdr{

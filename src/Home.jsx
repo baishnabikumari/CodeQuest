@@ -296,7 +296,7 @@ export default function Home({ onStart, xp }){
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.95 }}
             >
-                <Map size={20}/>
+                <img src="/map-button.png" alt="map" style={{ width: 50, height: 50, objectFit: "contain" }}/>
             </motion.button>
 
             <AnimatePresence>
