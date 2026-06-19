@@ -908,9 +908,9 @@ a:hover{
 .city-pin{
     position: absolute;
     transform: translate(-50%, -50%);
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
+    /* width: 130px; */
+    height: 36px;
+    border-radius: 20%;
     background: transparent;
     border: 2px solid transparent;
     cursor: pointer;
@@ -994,15 +994,16 @@ a:hover{
     box-shadow: 0 0 8px #E3533688;
 } */
 
-/* .pin-pulse{
+.pin-pulse{
     position: absolute;
     width: 10px;
     height: 10px;
     border-radius: 50%;
     background: var(--primary);
     top: 0;
+    left: 0;
     z-index: 1;
-} */
+}
 
 .city-card{
     position: absolute;
