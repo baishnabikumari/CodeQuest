@@ -1,3 +1,4 @@
+import { line } from "framer-motion/client"
 import { Lightbulb } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
 
@@ -21,6 +22,10 @@ const DIFF_XP = {
     Medium: 100,
     Hard: 200,
 }
+
+const PAIRS = { "{": "}", "(": ")", "[": "]", '"': '"', "'": "'", "`": "`" }
+const CLOSERS = new Set(["}", ")", "]", "'", "'", "`"])
+const EMPTY_PAIRS = new Set(["()", "[]", "{}", '""', "''", "``"])
 
 function renderDesc(text) {
     if (!text) return null
@@ -75,15 +80,72 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
     }
 
     function handleKeyDown(e) {
+        const ta = taRef.current
+        const s = ta.selectionStart
+        const end = ta.selectionEnd
+        const val = ta.value
+        const before = val.slice(0, s)
+        const after = val.slice(end)
+        const nextCh = val[s]
+
         if (e.key === "Tab") {
             e.preventDefault()
-            const s = e.target.selectionStart
-            setCode(v => v.slice(0, s) + " " + v.slice(e.target.selectionEnd))
+            setCode(val.slice(0, s) + " " + val.slice(end))
             cursorRef.current = s + 2
         }
         if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
             e.preventDefault()
             runTests()
+            return
+        }
+        if (e.key === "Enter") {
+            e.preventDefault()
+            const lineStart = before.lastIndexOf("\n") + 1
+            const curLine = before.slice(lineStart)
+            const indent = curLine.match(/^(s*)/)[1]
+            const lastCh = before.trimEnd().slice(-1)
+
+            if (["{", "(", "["].includes(lastCh)) {
+                const closer = PAIRS[lastCh]
+                if (nextCh === closer) {
+                    const ins = "\n" + indent + " " + "\n" + indent
+                    setCode(before + ins + after)
+                    cursorRef.current = s + ins.length
+                } else {
+                    const ins = "\n" + " "
+                    setCode(before + ins + after)
+                    cursorRef.current = s + ins.length
+                }
+            } else {
+                const ins = "\n" + indent
+                setCode(before + ins + after)
+                cursorRef.current = s + ins.length
+            }
+            return
+        }
+
+        if (CLOSERS.has(e.key) && nextCh === e.key && s === end) {
+            e.preventDefault()
+            requestAnimationFrame(() => {
+                ta.selectionStart = ta.selectionEnd = s + 1
+            })
+            return
+        }
+
+        if (PAIRS[e.key] && s === end) {
+            e.preventDefault()
+            setCode(before + e.key + PAIRS[e.key] + after)
+            cursorRef.current = s + 1
+            return
+        }
+
+        if (e.key === "Backspace" && s === end && s > 0) {
+            const pair = val.slice(s - 1, s + 1)
+            if (EMPTY_PAIRS.has(pair)) {
+                e.preventDefault()
+                setCode(val.slice(0, s - 1) + val.slice(s + 1))
+                cursorRef.current = s - 1
+            }
         }
     }
 
@@ -280,7 +342,7 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
                         <div className="tab-content">
                             {!review ? (
                                 <div className="empty-msg">
-                                    {solved ? "Click + Review for AI feedback" : "Please...Solve the challenge first!"}
+                                    {solved ? "Well Done - Please wait..." : "Please...Solve the challenge first!"}
                                 </div>
                             ) : (
                                 <div className="review-box">{review}</div>
