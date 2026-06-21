@@ -2,12 +2,12 @@ import { Lightbulb } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
 
 const TOPIC_ACCENTS = {
-    "variables and data types": "#00ff88",
+    "variables and data type": "#00ff88",
     "for loops and while loops": "#00d4ff",
     "functions and scope": "#ffd93d",
-    "array and array methods": "#ff6348",
+    "arrays and array methods": "#ff6348",
     "string manipulation": "#ff4da6",
-    "basic algorithm": "#a855f7",
+    "basic algorithms": "#a855f7",
 }
 
 const DIFF_COLORS = {
@@ -16,17 +16,46 @@ const DIFF_COLORS = {
     Hard: "#ff4757",
 }
 
+const DIFF_XP = {
+    Easy: 50,
+    Medium: 100,
+    Hard: 200,
+}
+
+function renderDesc(text) {
+    if (!text) return null
+    return text.split(/`([^`]+)`/).map((p, i) =>
+        i % 2 === 1
+            ? <code key={i} className="inline-code">{p}</code>
+            : p
+    )
+}
+
+function fmt(s) {
+    return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`
+}
+
 export default function Challenge({ challenge, topic, diff, onSolve, onBack, onNew, getHint, getReview }) {
     const [code, setCode] = useState(challenge?.starterCode || "")
-    const [activeTab, setActiveTab] = useState("editor")
+    const [tab, setTab] = useState("editor")
     const [results, setResults] = useState(null)
     const [solved, setSolved] = useState(false)
     const [hint, setHint] = useState("")
     const [hintBusy, setHintBusy] = useState(false)
+    const [hintOpen, setHintOpen] = useState(false)
     const [review, setReview] = useState("")
     const [reviewBusy, setReviewBusy] = useState(false)
+    const [running, setRunning] = useState(false)
+    const [cursor, setCursor] = useState({ ln: 1, col: 1 })
+    const [secs, setSecs] = useState(0)
     const taRef = useRef(null)
     const cursorRef = useRef(null)
+    const lineNumRef = useRef(null)
+
+    useEffect(() => {
+        const t = setInterval(() => setSecs(s => s + 1), 1000)
+        return () => clearInterval(t)
+    }, [])
 
     useEffect(() => {
         if (cursorRef.current !== null && taRef.current) {
@@ -35,35 +64,56 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
         }
     })
 
-    function handleTab(e) {
-        if (e.key !== "Tab") return
-        e.preventDefault()
-        const s = e.target.selectionStart
-        setCode(v => v.slice(0, s) + "  " + v.slice(e.target.selectionEnd))
-        cursorRef.current = s + 2
+    function syncScroll(e) {
+        if (lineNumRef.current) lineNumRef.current.scrollTop = e.target.scrollTop
+    }
+
+    function trackCursor(e) {
+        const before = e.target.value.slice(0, e.target.selectionStart)
+        const lines = before.split("\n")
+        setCursor({ ln: lines.length, col: lines[lines.length - 1].length + 1 })
+    }
+
+    function handleKeyDown(e) {
+        if (e.key === "Tab") {
+            e.preventDefault()
+            const s = e.target.selectionStart
+            setCode(v => v.slice(0, s) + " " + v.slice(e.target.selectionEnd))
+            cursorRef.current = s + 2
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+            e.preventDefault()
+            runTests()
+        }
     }
 
     function runTests() {
-        if (!challenge) return
-        const res = challenge.testCases.map(tc => {
-            try {
-                const fn = new Function(`${code}\nreturn solution(...${JSON.stringify(tc.args)});`)
-                const got = fn()
-                const ok = JSON.stringify(got) === JSON.stringify(tc.expected)
-                return { ok, args: tc.args, got, expected: tc.expected }
-            } catch (e) {
-                return { ok: false, args: tc.args, got: `Error: ${e.message}`, expected: tc.expected }
-            }
-        })
-        setResults(res)
-        setActiveTab("results")
-        const pass = res.every(r => r.ok)
-        setSolved(pass)
-        if (pass) onSolve()
+        if (!challenge || running) return
+        setRunning(true)
+
+        setTimeout(() => {
+            const res = challenge.testCases.map(tc => {
+                try {
+                    const fn = new Function(`${code}\nreturn solution(...${JSON.stringify(tc.args)});`)
+                    const got = fn()
+                    const ok = JSON.stringify(got) === JSON.stringify(tc.expected)
+                    return { ok, args: tc.args, got, expected: tc.expected }
+                } catch (err) {
+                    return { ok: false, args: tc.args, got: `Error: ${err.message}`, expected: tc.expected }
+                }
+            })
+            setResults(res)
+            setTab("results")
+            setRunning(false)
+            const pass = res.every(r => r.ok)
+            setSolved(pass)
+            if (pass) onSolve()
+        }, 120)
     }
 
     async function handleHint() {
         if (hintBusy) return
+        setHintOpen(true)
         setHintBusy(true)
         await getHint(challenge.description, code, txt => setHint(txt))
         setHintBusy(false)
@@ -72,13 +122,15 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
     async function handleReview() {
         if (reviewBusy) return
         setReviewBusy(true)
-        setActiveTab("review")
+        setTab("review")
         await getReview(challenge.description, code, txt => setReview(txt))
         setReviewBusy(false)
     }
 
-    const accent = TOPIC_ACCENTS[topic] || "#00ff88"
-    const diffColor = DIFF_COLORS[diff] || "#00ff88"
+    const accent = TOPIC_ACCENTS[topic] || "var(--green)"
+    const diffColor = DIFF_COLORS[diff] || "var(--green)"
+    const lines = code.split("\n")
+    const passCount = results ? results.filter(r => r.ok).length : 0
 
     return (
         <div className="chal-wrap fade-in">
@@ -86,31 +138,50 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
             {/* top bar */}
             <div className="chal-bar">
                 <button onClick={onBack} className="ghost-btn">Home</button>
-                <div style={{ display: "flex", gap: 8 }}>
-                    <span className="pill" style={{ color: accent, borderColor: accent + "55" }}>{topic}</span>
-                    <span className="pill" style={{ color: diffColor, borderColor: diffColor + "55" }}>{diff}</span>
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                    <span className="pill" style={{ color: accent, borderColor: accent + "44" }}>{topic}</span>
+                    <span className="pill" style={{ color: diffColor, borderColor: diffColor + "44" }}>{diff}</span>
                 </div>
-                <button onClick={onNew} className="ghost-btn">New</button>
+                <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                    <span className="chal-timer">{fmt(secs)}</span>
+                    <button onClick={onNew} className="ghost-btn">NEW</button>
+                </div>
             </div>
 
             {/* split */}
             <div className="chal-split">
 
                 {/* left panel - problem */}
-                <div className="chal-left">
-                    <div className="chal-title">{challenge.title}</div>
-                    <div className="chal-desc">{challenge.description}</div>
+                <div className="chal-left" style={{ borderLeftColor: accent }}>
+
+                    <div className="chal-head">
+                        <div className="chal-title">{challenge.title}</div>
+                        <span className="chal-xp" style={{ color: diffColor }}>
+                            +{DIFF_XP[diff] || 50} XP
+                        </span>
+                    </div>
+
+                    <div className="prob-section">
+                        <span className="prob-lbl">DESCRIPTION</span>
+                        <div className="chal-desc">{renderDesc(challenge.description)}</div>
+                    </div>
 
                     {challenge.funFact && (
-                        <div className="fact-box">
-                            <span style={{ color: "var(--cyan)" }}><Lightbulb /></span> {challenge.funFact}
+                        <div className="prob-section">
+                            <span className="prob-lbl">FUN FACT</span>
+                            <div className="fact-box">
+                                <Lightbulb size={13} style={{ flexShrink: 0, marginTop: 2, color: "var(--amber)" }} />
+                                <span>{challenge.funFact}</span>
+                            </div>
                         </div>
                     )}
-                    <div className="hint-wrap">
-                        <button onClick={handleHint} disabled={hintBusy} className="hint-btn">
-                            {hintBusy ? "Thinking..." : "Get Hint"}
+
+                    <div className="prob-section hint-section">
+                        <button className="hint-btn" onClick={handleHint} disabled={hintBusy}>
+                            <Lightbulb size={13} />
+                            {hintBusy ? "Thinking..." : hintOpen ? "HInt" : "Get Hint"}
                         </button>
-                        {hint && <div className="hint-box">{hint}</div>}
+                        {hintOpen && hint && <div className="hint-box">{hint}</div>}
                     </div>
                 </div>
 
@@ -119,88 +190,108 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
 
                     <div className="tab-bar">
                         <div style={{ display: "flex" }}>
-                            {["editor", "results", "review"].map(tab => (
+                            {["editor", "results", "review"].map(tabName => (
                                 <button
-                                    key={tab}
-                                    onClick={() => setActiveTab(tab)}
+                                    key={tabName}
                                     className="tab-btn"
+                                    onClick={() => setTab(tabName)}
                                     style={{
-                                        color: activeTab === tab ? "var(--green)" : "var(--text-dim)",
-                                        borderBottom: `2px solid ${activeTab === tab ? "var(--green)" : "transparent"}`,
+                                        color: tab === tabName ? accent : "var(--text-dim)",
+                                        borderBottom: `2px solid ${tab === tabName ? accent : "transparent"}`,
                                     }}
                                 >
-                                    {tab === "results"
-                                        ? `Results${results ? ` ${results.filter(r => r.ok).length}/${results.length}` : ""}` : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                                    {tabName === "results"
+                                        ? `Results${results ? ` ${passCount}/${results.length}` : ""}` : tabName.charAt(0).toUpperCase() + tabName.slice(1)}
                                 </button>
                             ))}
                         </div>
-                        <div style={{ display: "flex", gap: 8, padding: "0 12px" }}>
+                        <div style={{ display: "flex", gap: 8, padding: "0 12px", alignItems: "center" }}>
+                            <span className="lang-badge">JS</span>
                             {solved && (
                                 <button onClick={handleReview} disabled={reviewBusy} className="review-btn">
                                     {reviewBusy ? "..." : "Review"}
                                 </button>
                             )}
-                            <button onClick={runTests} className="run-btn"> Run</button>
+                            <button onClick={runTests} disabled={running} className="run-btn">
+                                {running ? "..." : "Run"}
+                            </button>
                         </div>
                     </div>
 
-                    {activeTab === "editor" && (
-                        <textarea
-                            ref={taRef}
-                            value={code}
-                            onChange={e => setCode(e.target.value)}
-                            onKeyDown={handleTab}
-                            className="code-editor"
-                        />
+                    {tab === "editor" && (
+                        <div className="editor-wrap">
+                            <div className="line-nums" ref={lineNumRef}>
+                                {lines.map((_, i) => <span key={i}>{i + 1}</span>)}
+                            </div>
+                            <textarea
+                                ref={taRef}
+                                value={code}
+                                onChange={e => setCode(e.target.value)}
+                                onKeyDown={handleKeyDown}
+                                onScroll={syncScroll}
+                                onClick={trackCursor}
+                                onKeyUp={trackCursor}
+                                className="code-editor"
+                                spellCheck={false}
+                                autoCapitalize="none"
+                                autoCorrect="off"
+                            />
+                        </div>
                     )}
-                    {activeTab === "results" && (
+                    {tab === "results" && (
                         <div className="tab-content">
-                            {!results
-                                ? <div className="empty-msg">Run Your Code to See Results</div>
-                                : <>
-                                    {results.map((res, i) => (
-                                        <div key={i} className="test-row" style={{
-                                            background: res.ok ? "#00ff8808" : "#ff475708",
-                                            borderColor: res.ok ? "#00ff8828" : "#ff475728",
-                                        }}>
-                                            <span style={{ color: res.ok ? "var(--green)" : "var(--red)", fontSize: 18 }}>
-                                                {res.ok ? "✓" : "X"}
-                                            </span>
-                                            <div className="test-meta">
-                                                <span style={{ color: "#777" }}>
-                                                    solution({res.args.map(a => JSON.stringify(a)).join(", ")})
-                                                </span>
-                                                <span style={{ color: "#555" }}> → </span>
-                                                <span style={{ color: res.ok ? "var(--green)" : "var(--red)" }}>
-                                                    {JSON.stringify(res.got)}
-                                                </span>
-                                                {!res.ok && (
-                                                    <span style={{ color: "#444", fontSize: 11 }}>
-                                                        {"  "}(expected: {JSON.stringify(res.expected)})
-                                                    </span>
-                                                )}
+                            {!results ? (
+                                <div className="empty-msg">Run your code to see the results</div>
+                            ) : (
+                                <>
+                                    {results.map((r, i) => (
+                                        <div key={i} className={`test-row ${r.ok ? "test-pass" : "test-fail"}`}>
+                                            <span className="test-icon">{r.ok ? "✔︎" : "x"}</span>
+                                            <div className="test-cols">
+                                                <div className="test-col">
+                                                    <span className="test-col-lbl">INPUT</span>
+                                                    <code>{r.args.map(a => JSON.stringify(a)).join(", ")}</code>
+                                                </div>
+                                                <div className="test-col">
+                                                    <span className="test-col-lbl">GOT</span>
+                                                    <code className={r.ok ? "got-ok" : "got-fail"}>
+                                                        {JSON.stringify(r.got)}
+                                                    </code>
+                                                </div>
+                                                <div className="test-col">
+                                                    <span className="test-col-lbl">EXPECTED</span>
+                                                    <code className="got-ok">{JSON.stringify(r.expected)}</code>
+                                                </div>
                                             </div>
                                         </div>
                                     ))}
                                     {solved && (
                                         <div className="solved-banner">
-                                            <span>All Tests Passed!</span>
-                                            <button onClick={onNew} className="next-btn">Next </button>
+                                            <span>✔︎ All Tests are passed!</span>
+                                            <button onClick={onNew} className="next-btn">Next Challenge ➤</button>
                                         </div>
                                     )}
                                 </>
-                            }
+                            )}
                         </div>
                     )}
 
-                    {activeTab === "review" && (
+                    {tab === "review" && (
                         <div className="tab-content">
-                            {!review
-                                ? <div className="empty-msg">
-                                    {solved ? "Click Review for AI feedback" : "Solve the challenge first!"}
-                                    </div>
-                                : <div className="review-box">{review}</div>
-                            }
+                            {!review ? (
+                                <div className="empty-msg">
+                                    {solved ? "Click + Review for AI feedback" : "Please...Solve the challenge first!"}
+                                </div>
+                            ) : (
+                                <div className="review-box">{review}</div>
+                            )}
+                        </div>
+                    )}
+                    {tab === "editor" && (
+                        <div className="status-bar">
+                            <span>Ln {cursor.ln} Col {cursor.col}</span>
+                            <span>JavaScript</span>
+                            <span className="status-hint">Ctrl+Enter to Run</span>
                         </div>
                     )}
                 </div>
