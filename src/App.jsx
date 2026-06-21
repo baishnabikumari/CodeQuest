@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import "./style.css"
 import Header from "./Header"
 import Home from "./Home"
@@ -11,8 +11,22 @@ export default function App(){
     const [topic, setTopic] = useState(null)
     const [diff, setDiff] = useState("Easy")
     const [challenge, setChallenge] = useState(null)
-    const [xp, setXp] = useState(0)
-    const [streak, setStreak] = useState(0)
+    const [xp, setXp] = useState(() => {
+        const saved = localStorage.getItem("cq-xp")
+        return saved ? parseInt(saved, 10) : 0
+    })
+    const [streak, setStreak] = useState(() => {
+        const saved = localStorage.getItem("cq-streak")
+        return saved ? parseInt(saved, 10) : 0
+    })
+
+    useEffect(() => {
+        localStorage.setItem("cq-xp", xp)
+    }, [xp])
+
+    useEffect(() => {
+        localStorage.setItem("cq-streak", streak)
+    }, [streak])
 
     const DIFF_PTS = { Easy: 50, Medium: 100, Hard: 200 }
     async function startChallenge(t, d){

@@ -64,8 +64,22 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
 
     useEffect(() => {
         if (cursorRef.current !== null && taRef.current) {
-            taRef.current.selectionStart = taRef.current.selectionEnd = cursorRef.current
+            const ta = taRef.current
+            ta.selectionStart = ta.selectionEnd = cursorRef.current
             cursorRef.current = null
+
+            const lineH = 13 * 1.65
+            const padTop = 16
+            const lineIdx = ta.value.slice(0, ta.selectionStart).split("\n").length - 1
+            const cursorY = lineIdx * lineH + padTop
+            const top = ta.scrollTop
+            const bot = top + ta.clientHeight
+
+            if (cursorY < top + padTop || cursorY > bot - lineH * 2){
+                ta.scrollTop = Math.max(0, cursorY - ta.clientHeight / 2)
+            }
+
+            if (lineNumRef.current) lineNumRef.current.scrollTop = ta.scrollTop
         }
     })
 

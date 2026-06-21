@@ -66,6 +66,7 @@ export default function Home({ onStart, xp }){
     const mapBtnRef = useRef(null)
     const [btnPos, setBtnPos] = useState({ x: 95, y: 95 })
     const [genDoReady, setGenDoReady] = useState(false)
+    const homeRef = useRef(null)
 
     useEffect(() => {
         const t = setInterval(() => setTickerIdx(i => (i + 1) % 3), 1000)
@@ -118,7 +119,7 @@ export default function Home({ onStart, xp }){
     const tickerDiff = DIFFS[tickerIdx]
 
     return (
-        <div className="home-v2 fade-in">
+        <div ref={homeRef} className="home-v2 fade-in">
             <div className={`home-bg ${overlay ? "is-blurred" : ""}`}>
                 <div className="mode-toggle">
                     <button
@@ -300,16 +301,16 @@ export default function Home({ onStart, xp }){
                     </motion.button>
                 )}
             </AnimatePresence>
-
             <motion.button
                 ref={mapBtnRef}
                 className="map-btn"
                 onClick={() => {
-                    if(mapBtnRef.current){
-                        const r = mapBtnRef.current.getBoundingClientRect()
+                    if(mapBtnRef.current && homeRef.current){
+                        const btn = mapBtnRef.current.getBoundingClientRect()
+                        const home = homeRef.current.getBoundingClientRect()
                         setBtnPos({
-                            x: Math.round(((r. left + r.width / 2) / window.innerWidth) * 100),
-                            y: Math.round(((r.top + r.height / 2) / window.innerHeight) * 100),
+                            x: Math.round(99, Math.round(((btn.left + btn.width / 2 - home.left) / home.width) * 100)),
+                            y: Math.round(99, Math.round(((btn.top + btn.height / 2 - home.top) / home.height) * 100)),
                         })
                     }
                     setMapOpen(true)

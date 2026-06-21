@@ -51,8 +51,11 @@ export default function MapScreen({ xp, onClose, btnPos }) {
             className="map-screen"
             initial={{ clipPath: `circle(0% at ${btnPos.x}% ${btnPos.y}%` }}
             animate={{ clipPath: `circle(150% at ${btnPos.x}% ${btnPos.y}%)` }}
-            exit={{ clipPath: `circle(0% at ${btnPos.x}% ${btnPos.y}%)` }}
-            transition={{ type: "spring", stiffness: 180, damping: 26 }}
+            exit={{
+                clipPath: `circle(0% at ${btnPos.x}% ${btnPos.y}%)`,
+                transition: { duration: 0.22, ease: "easeIn" }
+            }}
+            transition={{ type: "tween", duration: 0.38, ease: [0.25, 0.1, 0.25, 1] }}
         >
             <div className="map-hdr">
                 <span className="map-title">YOUR JOURNEY</span>
