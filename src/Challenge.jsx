@@ -260,7 +260,7 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
             <div className="chal-split">
 
                 {/* left panel - problem */}
-                <div className="chal-left" style={{ borderLeftColor: accent }}>
+                <div className="chal-left">
 
                     <div className="chal-head">
                         <div className="chal-title">{challenge.title}</div>
