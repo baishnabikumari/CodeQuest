@@ -39,6 +39,38 @@ function fmt(s) {
     return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`
 }
 
+// function TVFact({ fact }){
+//     const textRef = useRef(null)
+//     const wrapRef = useRef(null)
+//     const [scrolling, setScrolling] = useState(false)
+
+//     useEffect(() => {
+//         const t = textRef.current
+//         const w = wrapRef.current
+//         if (!t || !w) return
+//         const over = t.scrollHeight - w.clientHeight
+//         if (over > 8){
+//             t.style.setProperty("--over", `-${over + 10}px`)
+//             setScrolling(true)
+//         } else {
+//             setScrolling(false)
+//         }
+//     }, [fact])
+//     return(
+//         <div className="tv-wrap">
+//             <img src="/tv-removed-bg.pn" className="tv-img" alt="" />
+//             <div className="tv-screen">
+//                 <span className="tv-lbl">FUN FACT</span>
+//                 <div ref={wrapRef} className="tv-text-wrap">
+//                     <p ref={textRef} className={`tv-text${scrolling ? " tv-scrolling" : ""}`}>
+//                         {fact}
+//                     </p>
+//                 </div>
+//             </div>
+//         </div>
+//     )
+// }
+
 export default function Challenge({ challenge, topic, diff, onSolve, onBack, onNew, getHint, getReview }) {
     const [code, setCode] = useState(challenge?.starterCode || "")
     const [tab, setTab] = useState("editor")

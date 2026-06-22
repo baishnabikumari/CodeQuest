@@ -672,7 +672,7 @@ a:hover {
     position: absolute;
     top: 18%;
     left: 5%;
-    width: 73%;
+    width: 79%;
     bottom: 10%;
     display: flex;
     flex-direction: column;
@@ -683,17 +683,36 @@ a:hover {
 
 .tv-lbl{
     font-family: var(--font-game);
-    font-size: 7px;
+    font-size: 6px;
     color: var(--text-dim);
-    letter-spacing: 3px;
+    letter-spacing: 2px;
 }
 
 .tv-text{
     color: var(--text-mid);
-    font-size: 11px;
-    line-height: 1.55;
+    font-size: 8px;
+    line-height: 1.3;
     overflow: hidden;
 }
+/* 
+.tv-text-wrap{
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.tv-scrolling{
+    animation: tvScroll 9s ease-in-out infinite alternate;
+}
+
+@keyframes tvScroll{
+    0%, 15% {
+        transform: translateY(0);
+    }
+    85%, 100% {
+        transform: translateY(var(--over, 0));
+    }
+} */
 
 /* left panel */
 .chal-left {
