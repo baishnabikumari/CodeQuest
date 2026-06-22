@@ -1,4 +1,3 @@
-import { line } from "framer-motion/client"
 import { Lightbulb } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
 
@@ -24,7 +23,7 @@ const DIFF_XP = {
 }
 
 const PAIRS = { "{": "}", "(": ")", "[": "]", '"': '"', "'": "'", "`": "`" }
-const CLOSERS = new Set(["}", ")", "]", "'", "'", "`"])
+const CLOSERS = new Set(["}", ")", "]", '"', "'", "`"])
 const EMPTY_PAIRS = new Set(["()", "[]", "{}", '""', "''", "``"])
 
 function renderDesc(text) {
@@ -104,7 +103,7 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
 
         if (e.key === "Tab") {
             e.preventDefault()
-            setCode(val.slice(0, s) + " " + val.slice(end))
+            setCode(val.slice(0, s) + "  " + val.slice(end))
             cursorRef.current = s + 2
         }
         if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
@@ -116,17 +115,17 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
             e.preventDefault()
             const lineStart = before.lastIndexOf("\n") + 1
             const curLine = before.slice(lineStart)
-            const indent = curLine.match(/^(s*)/)[1]
+            const indent = curLine.match(/^(\s*)/)[1]
             const lastCh = before.trimEnd().slice(-1)
 
             if (["{", "(", "["].includes(lastCh)) {
                 const closer = PAIRS[lastCh]
                 if (nextCh === closer) {
-                    const ins = "\n" + indent + " " + "\n" + indent
+                    const ins = "\n" + indent + "  " + "\n" + indent
                     setCode(before + ins + after)
-                    cursorRef.current = s + ins.length
+                    cursorRef.current = s + ins.length + 3
                 } else {
-                    const ins = "\n" + " "
+                    const ins = "\n" + indent + "  "
                     setCode(before + ins + after)
                     cursorRef.current = s + ins.length
                 }
@@ -237,28 +236,38 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
                         </span>
                     </div>
 
-                    <div className="prob-section">
+                    <div className="prob-section desc-section">
                         <span className="prob-lbl">DESCRIPTION</span>
                         <div className="chal-desc">{renderDesc(challenge.description)}</div>
                     </div>
 
+                    <div className="prob-section">
+                        <button className="hint-btn" onClick={handleHint} disabled={hintBusy}>
+                            <Lightbulb size={13} />
+                            {hintBusy ? "Thinking..." : hintOpen ? "Hint" : "Get Hint"}
+                        </button>
+                        {hintOpen && hint && <div className="hint-box">{hint}</div>}
+                    </div>
+
                     {challenge.funFact && (
-                        <div className="prob-section">
-                            <span className="prob-lbl">FUN FACT</span>
-                            <div className="fact-box">
-                                <Lightbulb size={13} style={{ flexShrink: 0, marginTop: 2, color: "var(--amber)" }} />
-                                <span>{challenge.funFact}</span>
+                        <div className="tv-wrap">
+                            <img src="/tv-removed-bg.png" className="tv-img" alt="" />
+                            <div className="tv-screen">
+                                <span className="tv-lbl">FUN FACT</span>
+                                <p className="tv-text">
+                                    {challenge.funFact || "javaScript was created in just 10 days only by Brendan Eich in 1995!"}
+                                </p>
                             </div>
                         </div>
                     )}
 
-                    <div className="prob-section hint-section">
+                    {/* <div className="prob-section hint-section">
                         <button className="hint-btn" onClick={handleHint} disabled={hintBusy}>
                             <Lightbulb size={13} />
                             {hintBusy ? "Thinking..." : hintOpen ? "HInt" : "Get Hint"}
                         </button>
                         {hintOpen && hint && <div className="hint-box">{hint}</div>}
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* right pane - editor */}
