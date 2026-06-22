@@ -39,38 +39,6 @@ function fmt(s) {
     return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`
 }
 
-// function TVFact({ fact }){
-//     const textRef = useRef(null)
-//     const wrapRef = useRef(null)
-//     const [scrolling, setScrolling] = useState(false)
-
-//     useEffect(() => {
-//         const t = textRef.current
-//         const w = wrapRef.current
-//         if (!t || !w) return
-//         const over = t.scrollHeight - w.clientHeight
-//         if (over > 8){
-//             t.style.setProperty("--over", `-${over + 10}px`)
-//             setScrolling(true)
-//         } else {
-//             setScrolling(false)
-//         }
-//     }, [fact])
-//     return(
-//         <div className="tv-wrap">
-//             <img src="/tv-removed-bg.pn" className="tv-img" alt="" />
-//             <div className="tv-screen">
-//                 <span className="tv-lbl">FUN FACT</span>
-//                 <div ref={wrapRef} className="tv-text-wrap">
-//                     <p ref={textRef} className={`tv-text${scrolling ? " tv-scrolling" : ""}`}>
-//                         {fact}
-//                     </p>
-//                 </div>
-//             </div>
-//         </div>
-//     )
-// }
-
 export default function Challenge({ challenge, topic, diff, onSolve, onBack, onNew, getHint, getReview }) {
     const [code, setCode] = useState(challenge?.starterCode || "")
     const [tab, setTab] = useState("editor")
@@ -85,7 +53,6 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
     const [cursor, setCursor] = useState({ ln: 1, col: 1 })
     const [secs, setSecs] = useState(0)
     const taRef = useRef(null)
-    const cursorRef = useRef(null)
     const lineNumRef = useRef(null)
 
     useEffect(() => {
@@ -93,26 +60,26 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
         return () => clearInterval(t)
     }, [])
 
-    useEffect(() => {
-        if (cursorRef.current !== null && taRef.current) {
-            const ta = taRef.current
-            ta.selectionStart = ta.selectionEnd = cursorRef.current
-            cursorRef.current = null
+    // useLayoutEffect(() => {
+    //     if (cursorRef.current !== null && taRef.current) {
+    //         const ta = taRef.current
+    //         ta.selectionStart = ta.selectionEnd = cursorRef.current
+    //         cursorRef.current = null
 
-            const lineH = 13 * 1.65
-            const padTop = 16
-            const lineIdx = ta.value.slice(0, ta.selectionStart).split("\n").length - 1
-            const cursorY = lineIdx * lineH + padTop
-            const top = ta.scrollTop
-            const bot = top + ta.clientHeight
+    //         const lineH = 13 * 1.65
+    //         const padTop = 16
+    //         const lineIdx = ta.value.slice(0, ta.selectionStart).split("\n").length - 1
+    //         const cursorY = lineIdx * lineH + padTop
+    //         const top = ta.scrollTop
+    //         const bot = top + ta.clientHeight
 
-            if (cursorY < top + padTop || cursorY > bot - lineH * 2){
-                ta.scrollTop = Math.max(0, cursorY - ta.clientHeight / 2)
-            }
+    //         if (cursorY < top + padTop || cursorY > bot - lineH * 2){
+    //             ta.scrollTop = Math.max(0, cursorY - ta.clientHeight / 2)
+    //         }
 
-            if (lineNumRef.current) lineNumRef.current.scrollTop = ta.scrollTop
-        }
-    })
+    //         if (lineNumRef.current) lineNumRef.current.scrollTop = ta.scrollTop
+    //     }
+    // }, [code])
 
     function syncScroll(e) {
         if (lineNumRef.current) lineNumRef.current.scrollTop = e.target.scrollTop
@@ -133,10 +100,16 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
         const after = val.slice(end)
         const nextCh = val[s]
 
+        function apply(newVal, pos){
+            ta.value = newVal
+            ta.selectionStart = ta.selectionEnd = pos
+            setCode(newVal)
+        }
+
         if (e.key === "Tab") {
             e.preventDefault()
-            setCode(val.slice(0, s) + "  " + val.slice(end))
-            cursorRef.current = s + 2
+            apply(val.slice(0, s) + "  " + val.slice(end))
+            return
         }
         if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
             e.preventDefault()
@@ -154,33 +127,27 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
                 const closer = PAIRS[lastCh]
                 if (nextCh === closer) {
                     const ins = "\n" + indent + "  " + "\n" + indent
-                    setCode(before + ins + after)
-                    cursorRef.current = s + ins.length + 3
+                    apply(before + ins + after, s + indent.length + 3)
                 } else {
                     const ins = "\n" + indent + "  "
-                    setCode(before + ins + after)
-                    cursorRef.current = s + ins.length
+                    apply(before + ins + after, s + ins.length)
                 }
             } else {
                 const ins = "\n" + indent
-                setCode(before + ins + after)
-                cursorRef.current = s + ins.length
+                apply(before + ins + after, s + ins.length)
             }
             return
         }
 
         if (CLOSERS.has(e.key) && nextCh === e.key && s === end) {
             e.preventDefault()
-            requestAnimationFrame(() => {
-                ta.selectionStart = ta.selectionEnd = s + 1
-            })
+            ta.selectionStart = ta.selectionEnd = s + 1
             return
         }
 
         if (PAIRS[e.key] && s === end) {
             e.preventDefault()
-            setCode(before + e.key + PAIRS[e.key] + after)
-            cursorRef.current = s + 1
+            apply(before + e.key + PAIRS[e.key] + after, s + 1)
             return
         }
 
@@ -188,8 +155,7 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
             const pair = val.slice(s - 1, s + 1)
             if (EMPTY_PAIRS.has(pair)) {
                 e.preventDefault()
-                setCode(val.slice(0, s - 1) + val.slice(s + 1))
-                cursorRef.current = s - 1
+                apply(val.slice(0, s - 1) + val.slice(s + 1), s - 1)
             }
         }
     }
