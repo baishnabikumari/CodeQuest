@@ -1,4 +1,4 @@
-import { Lightbulb } from "lucide-react"
+import { Lightbulb, X } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
 
 const TOPIC_ACCENTS = {
@@ -221,6 +221,7 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
     async function handleHint() {
         if (hintBusy) return
         setHintOpen(true)
+        if (hint) return
         setHintBusy(true)
         await getHint(challenge.description, code, txt => setHint(txt))
         setHintBusy(false)
@@ -274,10 +275,17 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
                     </div>
 
                     <div className="prob-section">
-                        <button className="hint-btn" onClick={handleHint} disabled={hintBusy}>
-                            <Lightbulb size={13} />
-                            {hintBusy ? "Thinking..." : hintOpen ? "Hint" : "Get Hint"}
-                        </button>
+                        <div className="hint-row">
+                            <button className="hint-btn" onClick={handleHint} disabled={hintBusy}>
+                                <Lightbulb size={13} />
+                                {hintBusy ? "Thinking..." : hintOpen ? "Hint" : "Get Hint"}
+                            </button>
+                            {hintOpen && (
+                                <button className="hint-close" onClick={() => setHintOpen(false)}>
+                                    <X size={14} />
+                                </button>
+                            )}
+                        </div>
                         {hintOpen && hint && <div className="hint-box">{hint}</div>}
                     </div>
 
