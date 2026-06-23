@@ -38,6 +38,7 @@ https://github.com/user-attachments/assets/ee34f08c-9017-471f-9186-c54cf919ac8a
 4. Arrays and Array methods
 5. String Manipulation
 6. Basic Algo
+<img width="236" height="109" alt="Screenshot 2026-06-23 at 12 28 30 PM" src="https://github.com/user-attachments/assets/936d4207-fcfb-4758-9a4f-7545c6963a8c" />
 
 ---
 
@@ -61,6 +62,7 @@ https://github.com/user-attachments/assets/ee34f08c-9017-471f-9186-c54cf919ac8a
 ---
 
 ## project structure
+<img width="120" height="475" alt="Screenshot 2026-06-23 at 12 31 22 PM" src="https://github.com/user-attachments/assets/5b8a2ee5-23b8-4870-9089-0986b3867473" />
 
 
 ---
