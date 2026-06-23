@@ -5,37 +5,37 @@ import { useState } from "react"
 const CITIES = [
     {
         id: "nyc", name: "New York", emoji: "🗽", country: "USA",
-        xpNeeded: 50, x: 18.5, y: 64, width: 95,
+        xpNeeded: 50, x: 26.7, y: 64.7, width: 94,
         fact: "NYC has about 300,000 teck workers and the world's most iconic skyline too.",
         codeLink: "Wall street's trading systems monitor of prices of stocks every milliseconds by using variables"
     },
     {
         id: "london", name: "London", emoji: "🎡", country: "UK",
-        xpNeeded: 150, x: 22.3, y: 9.8, width: 129,
+        xpNeeded: 150, x: 29.5, y: 10.1, width: 127,
         fact: "London has 270+ nationalities speaking over 300+ languages.",
         codeLink: "The financial systems in london constantly check out millions of current market points with the aid of loops"
     },
     {
         id: 'paris', name: "Paris", emoji: "🗼", country: "France",
-        xpNeeded: 300, x: 27.5, y: 82.72, width: 113,
+        xpNeeded: 300, x: 33.4, y: 82.72, width: 111,
         fact: "The eiffel tower grows 15cm taller every summer due to the heat expansion.",
         codeLink: "The scheduling system of Paris Metro optimises routes for 5M daily passengers using functions"
     },
     {
         id: "dubai", name: "Dubai", emoji: "🕋", country: "UAE",
-        xpNeeded: 500, x: 45, y: 13.8, width: 118,
+        xpNeeded: 500, x: 46.4, y: 13.8, width: 116,
         fact: "Dubai has around 200+ natinalities - the world's most diverse city.",
         codeLink: "In duabi, sensor readings are stored in arrays in the small city to control power, water and traffic"
     },
     {
         id: "seoul", name: "Seoul", emoji: "⛩️", country: "South Korea",
-        xpNeeded: 750, x: 54.6, y: 87.2, width: 118.6,
+        xpNeeded: 750, x: 53.4, y: 87.2, width: 117,
         fact: "Seoul has the world's fastest avg internet speed.",
         codeLink: "String manipulation is a method used by korean tech giants to create multilingual software for billion of users."
     },
     {
         id: "tokyo", name: "Tokyo", emoji: "🏯", country: "Japan",
-        xpNeeded: 1000, x: 65.7, y: 26.1, width: 123,
+        xpNeeded: 1000, x: 61.7, y: 26.1, width: 120,
         fact: "Tokyo's shinjuku station handle around 3.5 million passangers daily - the world's busiest station.",
         codeLink: "The smart city tokyo has sophisticated algorithm powering the city's traffic, power and emergency management systems."
     },

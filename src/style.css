@@ -1457,8 +1457,8 @@ a:hover {
     position: absolute;
     transform: translate(-50%, -50%);
     /* width: 130px; */
-    height: 36px;
-    border-radius: 20%;
+    height: 33.9px;
+    border-radius: 29%;
     background: transparent;
     border: 2px solid transparent;
     cursor: pointer;
