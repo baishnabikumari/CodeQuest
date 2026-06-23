@@ -212,7 +212,7 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
             {/* top bar */}
             <div className="chal-bar">
                 <button onClick={onBack} className="ghost-btn">Home</button>
-                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <div style={{ display: "flex", gap: 8, alignItems: "center", marginRight: "auto" }}>
                     <span className="pill" style={{ color: accent, borderColor: accent + "44" }}>{topic}</span>
                     <span className="pill" style={{ color: diffColor, borderColor: diffColor + "44" }}>{diff}</span>
                 </div>
