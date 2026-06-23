@@ -1,25 +1,25 @@
-import { motion, AnimatePresence} from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { Map } from "lucide-react"
 import MapScreen from "./MapScreen"
 import { Brackets, Brain, CheckCheck, Dot, Icon, Play, Quote, Repeat, Shuffle, SquareFunction, Ticket, Variable } from "lucide-react"
 import { useEffect, useMemo, useRef, useState } from "react"
 
 const TOPICS = [
-    {id: "variables and data type", label: "Variables", Icon: Variable, accent: "#E35336", times: { Easy: "2 min", Medium: "4 min", Hard: "7 min" }},
-    {id: "for loops and while loops", label: "Loops", Icon: Repeat, accent: "#F4A460", times: { Easy: "3 min", Medium: "5 min", Hard: "9 min" }},
-    {id: "functions and scope", label: "Functions", Icon: SquareFunction, accent: "#A0522D", times: { Easy: "4 min", Medium: "6 min", Hard: "10 min"}},
-    {id: "arrays and array methods", label: "Arrays", Icon: Brackets, accent: "#E35336", times: { Easy: "4 min", Medium: "7 min", Hard: "12 min"}},
-    {id: "string manipulation", label: "Strings", Icon: Quote, accent: "#F4A460", times: { Easy: "3 min", Medium: "5 min", Hard: "9 min"}},
-    {id: "basic algorithms", label: "Algorithms", Icon: Brain, accent: "#A0522D", times: { Easy: "6 min", Medium: "9 min", Hard: "15 min"}},
+    { id: "variables and data type", label: "Variables", Icon: Variable, accent: "#E35336", times: { Easy: "2 min", Medium: "4 min", Hard: "7 min" } },
+    { id: "for loops and while loops", label: "Loops", Icon: Repeat, accent: "#F4A460", times: { Easy: "3 min", Medium: "5 min", Hard: "9 min" } },
+    { id: "functions and scope", label: "Functions", Icon: SquareFunction, accent: "#A0522D", times: { Easy: "4 min", Medium: "6 min", Hard: "10 min" } },
+    { id: "arrays and array methods", label: "Arrays", Icon: Brackets, accent: "#E35336", times: { Easy: "4 min", Medium: "7 min", Hard: "12 min" } },
+    { id: "string manipulation", label: "Strings", Icon: Quote, accent: "#F4A460", times: { Easy: "3 min", Medium: "5 min", Hard: "9 min" } },
+    { id: "basic algorithms", label: "Algorithms", Icon: Brain, accent: "#A0522D", times: { Easy: "6 min", Medium: "9 min", Hard: "15 min" } },
 ]
 
 const DIFFS = [
-    {label: "Easy", pts: 50, color: "#00ff88"},
-    {label: "Medium", pts: 100, color: "#ffd93d"},
-    {label: "Hard", pts: 200, color: "#ff4757"},
+    { label: "Easy", pts: 50, color: "#00ff88" },
+    { label: "Medium", pts: 100, color: "#ffd93d" },
+    { label: "Hard", pts: 200, color: "#ff4757" },
 ]
 
-function BinaryRain(){
+function BinaryRain() {
     const chars = useMemo(() =>
         Array.from({ length: 55 }, (_, i) => ({
             id: i,
@@ -43,7 +43,7 @@ function BinaryRain(){
 }
 
 // card animation
-function cardAnim(pos){
+function cardAnim(pos) {
     const abs = Math.abs(pos)
     return {
         x: pos * 215,
@@ -54,7 +54,7 @@ function cardAnim(pos){
     }
 }
 
-export default function Home({ onStart, xp }){
+export default function Home({ onStart, xp }) {
     const [mode, setMode] = useState("choose")
     const [activeIdx, setActiveIdx] = useState(0)
     const [tickerIdx, setTickerIdx] = useState(0)
@@ -74,13 +74,13 @@ export default function Home({ onStart, xp }){
     }, [])
 
     useEffect(() => {
-        function onKey(e){
-            if(overlay){
+        function onKey(e) {
+            if (overlay) {
                 if (e.key === "Escape") setOverlay(false)
                 return
             }
-            if(shuffling) return
-            if(mode === "shuffle") return
+            if (shuffling) return
+            if (mode === "shuffle") return
             if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A")
                 setActiveIdx(i => (i - 1 + 6) % 6)
             if (e.key === "ArrowRight" || e.key === "d" || e.key === "D")
@@ -92,16 +92,16 @@ export default function Home({ onStart, xp }){
         return () => window.removeEventListener("keydown", onKey)
     }, [overlay, shuffling, mode])
 
-    function handleShuffle(){
-        if(shuffling) return
+    function handleShuffle() {
+        if (shuffling) return
         setShuffling(true)
         setOverlay(false)
         setToast(false)
         let count = 0
         const t = setInterval(() => {
-            setActiveIdx(Math. floor(Math.random() * 6))
+            setActiveIdx(Math.floor(Math.random() * 6))
             count++
-            if (count >= 14) { 
+            if (count >= 14) {
                 clearInterval(t);
                 setShuffling(false)
                 setGenDoReady(true)
@@ -113,8 +113,8 @@ export default function Home({ onStart, xp }){
     }
 
     const getPos = idx => {
-       let p = (idx - activeIdx + 6) % 6
-       return p > 3 ? p - 6 : p
+        let p = (idx - activeIdx + 6) % 6
+        return p > 3 ? p - 6 : p
     }
     const tickerDiff = DIFFS[tickerIdx]
 
@@ -134,9 +134,9 @@ export default function Home({ onStart, xp }){
                         className={`mode-btn ${mode === "shuffle" ? "mode-active" : ""} ${shuffling ? "shuffling" : ""}`}
                         onClick={() => {
                             setMode("shuffle")
-                            if(mode !== "shuffle"){
-                                if(genDoReady) setOverlay(true)
-                                    else handleShuffle()
+                            if (mode !== "shuffle") {
+                                if (genDoReady) setOverlay(true)
+                                else handleShuffle()
                             }
                         }}
                     >
@@ -149,10 +149,10 @@ export default function Home({ onStart, xp }){
                 {overlay && (
                     <motion.div
                         className="rain-layer"
-                        initial={{ opacity:0 }}
-                        animate={{ opacity:1 }}
-                        exit={{ opacity:0 }}
-                        transition={{ duration:0.2 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
                     >
                         <BinaryRain />
                     </motion.div>
@@ -160,13 +160,13 @@ export default function Home({ onStart, xp }){
             </AnimatePresence>
             <div className="carousel-wrap">
                 {TOPICS.map((t, idx) => {
-                     const pos = getPos(idx)
-                     const visible = Math.abs(pos) <= 2
-                     const anim = cardAnim(pos)
-                     const isCenter = pos === 0
-                     const expanded = isCenter && overlay
+                    const pos = getPos(idx)
+                    const visible = Math.abs(pos) <= 2
+                    const anim = cardAnim(pos)
+                    const isCenter = pos === 0
+                    const expanded = isCenter && overlay
 
-                     return (
+                    return (
                         <motion.div
                             key={t.id}
                             className="card-v2"
@@ -182,11 +182,11 @@ export default function Home({ onStart, xp }){
                             }}
                             transition={{ type: "spring", stiffness: 280, damping: 28, filter: { type: "tween", duration: 0.15 } }}
                             onClick={() => {
-                                if(overlay) return
-                                if(shuffling) return
-                                if(mode === "shuffle" && !isCenter) return
-                                if(isCenter) setOverlay(true)
-                                    else if(visible) setActiveIdx(idx)
+                                if (overlay) return
+                                if (shuffling) return
+                                if (mode === "shuffle" && !isCenter) return
+                                if (isCenter) setOverlay(true)
+                                else if (visible) setActiveIdx(idx)
                             }}
                         >
                             {!expanded && (
@@ -204,12 +204,12 @@ export default function Home({ onStart, xp }){
                                         <motion.div
                                             key={tickerIdx}
                                             className="card-ticker"
-                                            initial={{ opacity:0, y:5 }}
-                                            animate={{ opacity:1, y:0 }}
-                                            exit={{ opacity:0, y:-5 }}
+                                            initial={{ opacity: 0, y: 5 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -5 }}
                                             transition={{ duration: 0.18 }}
                                         >
-                                            <span style={{ color: tickerDiff.color, fontWeight: 600}}>{tickerDiff.label}</span>
+                                            <span style={{ color: tickerDiff.color, fontWeight: 600 }}>{tickerDiff.label}</span>
                                             <span className="ticker-dot"> · </span>
                                             <span>{t.times[tickerDiff.label]}</span>
                                         </motion.div>
@@ -220,7 +220,7 @@ export default function Home({ onStart, xp }){
                             {expanded && (
                                 <div className="expand-content">
                                     <div className="expand-icon" style={{ background: t.accent + "22" }}>
-                                        <t.Icon size={32} color={t.accent} strokeWidth={1.5}/>
+                                        <t.Icon size={32} color={t.accent} strokeWidth={1.5} />
                                     </div>
                                     <div className="expand-name" style={{ color: t.accent }}>{t.label}</div>
 
@@ -244,7 +244,7 @@ export default function Home({ onStart, xp }){
                                     <button
                                         className="overlay-start"
                                         style={{ background: t.accent }}
-                                        onClick={() => {setGenDoReady(false); onStart(t.id, diff) }}
+                                        onClick={() => { setGenDoReady(false); onStart(t.id, diff) }}
                                     >
                                         Start
                                     </button>
@@ -254,7 +254,7 @@ export default function Home({ onStart, xp }){
                                 </div>
                             )}
                         </motion.div>
-                     )
+                    )
                 })}
             </div>
 
@@ -282,13 +282,13 @@ export default function Home({ onStart, xp }){
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.25 }}
                     >
-                        <CheckCheck/> Gen-Do picked this!
+                        <CheckCheck /> Gen-Do picked this!
                     </motion.div>
                 )}
             </AnimatePresence>
 
             <AnimatePresence>
-                {mode === "shuffle" && !shuffling && !overlay &&(
+                {mode === "shuffle" && !shuffling && !overlay && (
                     <motion.button
                         className="shuffle-again-btn"
                         onClick={handleShuffle}
@@ -297,7 +297,7 @@ export default function Home({ onStart, xp }){
                         exit={{ opacity: 0, y: 8 }}
                         transition={{ duration: 0.25 }}
                     >
-                       <Shuffle size={18}/> Shuffle Again
+                        <Shuffle size={18} /> Shuffle Again
                     </motion.button>
                 )}
             </AnimatePresence>
@@ -305,7 +305,7 @@ export default function Home({ onStart, xp }){
                 ref={mapBtnRef}
                 className="map-btn"
                 onClick={() => {
-                    if(mapBtnRef.current && homeRef.current){
+                    if (mapBtnRef.current && homeRef.current) {
                         const btn = mapBtnRef.current.getBoundingClientRect()
                         const home = homeRef.current.getBoundingClientRect()
                         setBtnPos({
@@ -316,12 +316,12 @@ export default function Home({ onStart, xp }){
                     setMapOpen(true)
                 }}
             >
-                <img src="/map-button.png" alt="map" style={{ width: 50, height: 50, objectFit: "contain" }}/>
+                <img src="/map-button.png" alt="map" style={{ width: 50, height: 50, objectFit: "contain" }} />
             </motion.button>
 
             <AnimatePresence>
                 {mapOpen && (
-                    <MapScreen xp={xp} onClose={() => setMapOpen(false)} btnPos={btnPos}/>
+                    <MapScreen xp={xp} onClose={() => setMapOpen(false)} btnPos={btnPos} />
                 )}
             </AnimatePresence>
         </div>

@@ -60,27 +60,6 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
         return () => clearInterval(t)
     }, [])
 
-    // useLayoutEffect(() => {
-    //     if (cursorRef.current !== null && taRef.current) {
-    //         const ta = taRef.current
-    //         ta.selectionStart = ta.selectionEnd = cursorRef.current
-    //         cursorRef.current = null
-
-    //         const lineH = 13 * 1.65
-    //         const padTop = 16
-    //         const lineIdx = ta.value.slice(0, ta.selectionStart).split("\n").length - 1
-    //         const cursorY = lineIdx * lineH + padTop
-    //         const top = ta.scrollTop
-    //         const bot = top + ta.clientHeight
-
-    //         if (cursorY < top + padTop || cursorY > bot - lineH * 2){
-    //             ta.scrollTop = Math.max(0, cursorY - ta.clientHeight / 2)
-    //         }
-
-    //         if (lineNumRef.current) lineNumRef.current.scrollTop = ta.scrollTop
-    //     }
-    // }, [code])
-
     function syncScroll(e) {
         if (lineNumRef.current) lineNumRef.current.scrollTop = e.target.scrollTop
     }
@@ -100,7 +79,7 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
         const after = val.slice(end)
         const nextCh = val[s]
 
-        function apply(newVal, pos){
+        function apply(newVal, pos) {
             ta.value = newVal
             ta.selectionStart = ta.selectionEnd = pos
             setCode(newVal)
@@ -266,14 +245,6 @@ export default function Challenge({ challenge, topic, diff, onSolve, onBack, onN
                             </div>
                         </div>
                     )}
-
-                    {/* <div className="prob-section hint-section">
-                        <button className="hint-btn" onClick={handleHint} disabled={hintBusy}>
-                            <Lightbulb size={13} />
-                            {hintBusy ? "Thinking..." : hintOpen ? "HInt" : "Get Hint"}
-                        </button>
-                        {hintOpen && hint && <div className="hint-box">{hint}</div>}
-                    </div> */}
                 </div>
 
                 {/* right pane - editor */}

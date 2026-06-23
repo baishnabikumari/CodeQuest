@@ -19,28 +19,28 @@ Return ONLY valid, no markdown, no backticks:
     "funFact": "one short fun fact about this topic"
 }
 Rules: function must be named "solution". args must be valid JSON. exactly 3 test cases.`
-    try{
+    try {
         const result = await model.generateContent(prompt)
         const text = result.response.text()
         return JSON.parse(text.replace(/```json\n?|```/g, "").trim())
     } catch {
-        return{
+        return {
             title: "Count the Vowels",
             description: "Write a function that takes a string and returns the number of vowels (a, e, i, o, u).\n\nExample: solution(\"hello\") → 2",
             starterCode: "function solution(str) {\n // your code here\n}",
             testCases: [
-                { args: ["hello"], expected: 2},
-                { args: ["rhythm"], expected: 0},
-                { args: ["beautiful"], expected: 5},
+                { args: ["hello"], expected: 2 },
+                { args: ["rhythm"], expected: 0 },
+                { args: ["beautiful"], expected: 5 },
             ],
             funFact: "English has 5 vowels but over 20 vowel sounds!"
         }
     }
 }
 
-export async function getHint(description, code, onChunk){
+export async function getHint(description, code, onChunk) {
     const prompt = `Challenge: ${description}\n\nStudent code:\n${code}\n\nGive a 2-sentence hint. Be encouraging. dont give away the answer.`
-    try{
+    try {
         const result = await model.generateContentStream(prompt)
         let full = ""
         for await (const chunk of result.stream) {
@@ -57,10 +57,10 @@ export async function getHint(description, code, onChunk){
 
 export async function getReview(description, code, onChunk) {
     const prompt = `A student solved this challenge:\n${description}\n\nTheir solution:\n${code}\n\nGive 2-3 sentence of the code review. Mention one strength and one improvement.`
-    try{
+    try {
         const result = await model.generateContentStream(prompt)
         let full = ""
-        for await (const chunk of result.stream){
+        for await (const chunk of result.stream) {
             full += chunk.text()
             onChunk(full)
         }

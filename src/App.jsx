@@ -6,7 +6,7 @@ import Loading from "./Loading"
 import Challenge from "./Challenge"
 import { genChallenge, getHint, getReview } from "./gemini"
 
-export default function App(){
+export default function App() {
     const [screen, setScreen] = useState("home")
     const [topic, setTopic] = useState(null)
     const [diff, setDiff] = useState("Easy")
@@ -29,7 +29,7 @@ export default function App(){
     }, [streak])
 
     const DIFF_PTS = { Easy: 50, Medium: 100, Hard: 200 }
-    async function startChallenge(t, d){
+    async function startChallenge(t, d) {
         setTopic(t)
         setDiff(d)
         setScreen("loading")
@@ -38,7 +38,7 @@ export default function App(){
         setScreen("challenge")
     }
 
-    function onSolve(){
+    function onSolve() {
         setXp(x => x + (DIFF_PTS[diff] || 50))
         setStreak(s => s + 1)
     }
@@ -50,12 +50,12 @@ export default function App(){
         setScreen("challenge")
     }
 
-    return(
+    return (
         <div className="app">
-            <Header xp={xp} streak={streak}/>
+            <Header xp={xp} streak={streak} />
             <div className="body">
                 {screen === "home" && (
-                    <Home onStart={startChallenge} xp={xp}/>
+                    <Home onStart={startChallenge} xp={xp} />
                 )}
                 {screen === "loading" && <Loading />}
                 {screen === "challenge" && challenge && (

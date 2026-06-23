@@ -1,16 +1,79 @@
-# React + Vite
+# CodeQuest
+> A travel themed javaScript coding challenge website where you can earn XP and unlock the world cities and also you can level up your javascript skills.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> Made for the teen cooders(14-20), but fun for all picking up the js.
 
-Currently, two official plugins are available:
+- Pick a topic, choose your difficulty and solve the AI-generated coding challenge in a vs code styled editor and earn XP and use them to unlock the cities - Every challenge comes with a hint, review and Fun Fact.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+# ScreenShots
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Features
+
+- Card carousel home screen
+- Gen-do shuffle mode - cant decide what topic to pick? lets gen-do so that for you(hit the Gen_do)
+- World Map with XP Gated cities.
+- VS Code style code editor
+- AI-powered Challenge Generation(Gemini 2.5 flash model)
+- In-Browser test runner
+- Tv Fun-Fact compnent(png made using canva)
+- Loading screen(postman theme like - got to learn from someone who made this on uiverse.io)
+- XP and Streak system
+
+---
+
+# Topics?
+1. Variables and Data Type
+2. Loops(for and while)
+3. Functions and Scope
+4. Arrays and Array methods
+5. String Manipulation
+6. Basic Algo
+
+---
+
+# Difficulty levels
+1. Easy - 50 XP
+2. Medium - 100 XP
+3. Hard - 200 XP
+
+---
+
+## Tech used
+- Framework -> react
+- Vite
+- animations using Framer motion(motion)
+- Icons -> Lucid react
+- Ai backend -> gemini 2.5 flash
+- styling -> css(no tailwind)
+- Fonts -> mono, sans etc.
+- localstorage
+
+---
+
+## project structure
+
+
+---
+
+## installation
+```bash
+# clone this repo
+- git clone /repo-url
+- cd CodeQuest
+
+# install npm
+- npm i
+
+# put your api key in .env
+- echo "api-key"
+
+# start the dev server
+- npm run dev (copy the localhost add and paste it to chrome to see the project or use inside vs-code only.)
+```
+
+## Made by Bishuu with 💖 Thanks... Happy Coding...
